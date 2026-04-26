@@ -1,0 +1,292 @@
+/* --- 1. Main Body Background & Slow Drift --- */
+body.body_bg {
+    background-color: #0c0f18; /* Deep space base */
+    background-image: 
+        /* Layer 1: The Sparkle SVG */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%23b3a5ef' fill-opacity='0.6'%3E%3Cpath d='M40 50h-4v4h4v-4zM180 20h-5v5h5v-5zM250 150h-8v8h8v-8z'/%3E%3Crect x='100' y='200' width='4' height='4' opacity='0.8'/%3E%3Crect x='20' y='250' width='3' height='3' opacity='0.5'/%3E%3Crect x='280' y='40' width='6' height='6' opacity='0.4'/%3E%3Crect x='60' y='120' width='2' height='2' opacity='0.9'/%3E%3Cpath d='M220 270h-3v3h3v-3z'/%3E%3Crect x='150' y='80' width='5' height='5' opacity='0.7'/%3E%3Crect x='10' y='10' width='2' height='2' opacity='0.6'/%3E%3C/g%3E%3C/svg%3E"), 
+        /* Layer 2: Star Field Gradients */
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+        /* Layer 3: Deep Blue Atmosphere */
+        linear-gradient(to bottom, #0f172a, #1e293b);
+        
+    background-size: 300px 300px, 550px 550px, 350px 350px, cover; 
+    background-attachment: fixed;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    animation: slowDrift 180s linear infinite; 
+}
+
+/* --- 2. Celestial Layers (Aurora & Shooting Star) --- */
+.aurora-layer {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba(0, 255, 200, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(179, 165, 239, 0.2), transparent 50%);
+    filter: blur(80px);
+    z-index: -5; /* Furthest back */
+    animation: auroraWave 15s ease-in-out infinite alternate;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 30%; left: 80%; 
+    width: 2px; height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+    animation: shootingStar 12s linear infinite;
+    pointer-events: none;
+    z-index: -1; /* Behind content but above background-image */
+}
+
+/* --- 3. Forest & Tree Layers (The Fixing Point) --- */
+.background-forest {
+    position: fixed;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 40vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 1; /* Keep it low! */
+    opacity: 0.8;
+}
+
+.foreground-trees {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 15vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 2; /* Still below your UI/Art (z-index 10+) */
+}
+
+/* --- 4. Animations --- */
+@keyframes slowDrift {
+    0% { background-position: 0px 0px, 0px 0, 40px 60px, center; }
+    100% { background-position: -600px -600px, -200px 0, 0 0, center; }
+}
+
+@keyframes auroraWave {
+    from { opacity: 0.4; transform: translateY(0); }
+    to { opacity: 0.8; transform: translateY(-20px); }
+}
+
+@keyframes shootingStar {
+    0% { transform: rotate(315deg) translateX(0); opacity: 0; }
+    3% { opacity: 1; }
+    10% { transform: rotate(315deg) translateX(-100vw); opacity: 0; }
+    100% { transform: rotate(315deg) translateX(-100vw); opacity: 0; }
+}
+
+/* --- 1. The Forest Floor (Lowering the Layer) --- */
+.background-forest {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    /* Limit height so trees never reach the top navigation/logo */
+    height: 60vh; 
+    
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-end;
+    
+    pointer-events: none; /* Allows you to click through trees to the search bar */
+    z-index: -1; /* Pushes the entire forest behind EVERYTHING else */
+    overflow: hidden;
+}
+
+/* --- 2. Scaling the Trees --- */
+.tree {
+    flex-shrink: 0;
+    margin-right: -120px;
+    transform-origin: bottom;
+    /* Ensure the largest tree still stays below your title */
+    max-height: 100%; 
+    animation: forestSway 12s ease-in-out infinite alternate;
+}
+
+/* Adjusting the specific shapes to be slightly shorter */
+.tree:nth-child(3n+1) { height: 55vh; } /* Giant Orange */
+.tree:nth-child(3n+2) { height: 45vh; } /* Slender Blue */
+.tree:nth-child(3n)   { height: 40vh; } /* Jagged Violet */
+
+/* --- 3. Protecting the Header & Search Bar --- */
+/* Add this to your main CSS file to ensure they stay on top */
+header, 
+.search-container, 
+.logo-area,
+.navigation-bar {
+    position: relative;
+    z-index: 100; /* High number to guarantee they sit above the trees */
+}
+
+/* Randomized Shapes & Twilight Palette */
+/* SHAPE 1: The Grand Giant (Orange/Violet) */
+.tree:nth-child(3n+1) { 
+    height: 70vh; /* Increased for grander scale */
+    width: 240px; 
+    background: linear-gradient(to bottom, #ff8c00 0%, #4b0082 60%, #05070a 100%);
+    /* Natural, slightly irregular pine */
+    clip-path: polygon(50% 0%, 68% 22%, 55% 22%, 82% 48%, 60% 48%, 92% 85%, 55% 85%, 55% 100%, 45% 100%, 45% 85%, 8% 85%, 40% 48%, 18% 48%, 45% 22%, 32% 22%);
+    z-index: 3;
+    margin-right: -130px; /* Adjusted for better density */
+}
+
+/* SHAPE 2: The Slender Fir (FIXED BLUE ALIGNMENT) */
+.tree:nth-child(3n+2) { 
+    height: 58vh; 
+    width: 150px; 
+    background: linear-gradient(to bottom, #00d4ff 0%, #2a1e5f 70%, #05070a 100%);
+    /* Strictly centered peak and trunk to fix misalignment */
+    clip-path: polygon(50% 0%, 62% 18%, 52% 18%, 70% 42%, 55% 42%, 80% 88%, 53% 88%, 53% 100%, 47% 100%, 47% 88%, 20% 88%, 45% 42%, 30% 42%, 48% 18%, 38% 18%);
+    animation-delay: -3.5s;
+    z-index: 2;
+    margin-right: -100px;
+}
+
+/* SHAPE 3: The Jagged Ancient (Deep Violet) */
+.tree:nth-child(3n) { 
+    height: 52vh; 
+    width: 210px; 
+    background: linear-gradient(to bottom, #7b2ff7 0%, #1e1e30 70%, #05070a 100%);
+    /* Jagged, uneven layers for a natural look */
+    clip-path: polygon(50% 8%, 65% 28%, 58% 28%, 85% 58%, 62% 58%, 95% 92%, 55% 92%, 55% 100%, 45% 100%, 45% 92%, 5% 92%, 38% 58%, 15% 58%, 42% 28%, 35% 28%);
+    animation-delay: -7s;
+    z-index: 1;
+    margin-right: -110px;
+}
+
+@keyframes forestSway {
+    from { transform: rotate(-1.5deg); }
+    to { transform: rotate(1.5deg); }
+}
+/* --- 4. Celestial Elements --- */
+.aurora-layer {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 200, 0.2), transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(179, 165, 239, 0.25), transparent 60%);
+    filter: blur(100px);
+    z-index: -2;
+    animation: auroraPulse 20s ease-in-out infinite alternate;
+}
+
+/* Ensure Carousel is definitely on top of these new colorful trees */
+#dynamic-carousel-track, .carousel-item, .carousel-container {
+    position: relative;
+    z-index: 500 !important;
+}
+
+@keyframes auroraPulse {
+    from { opacity: 0.5; transform: scale(1); }
+    to { opacity: 0.8; transform: scale(1.05); }
+}
+.aurora-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* Behind the forest, in front of the dark sky */
+    overflow: hidden;
+    filter: blur(60px); /* Creates the soft "mist" look */
+    opacity: 0.4;
+}
+
+.aurora {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+        90deg, 
+        rgba(0, 212, 255, 0) 0%, 
+        rgba(123, 47, 247, 0.5) 25%, 
+        rgba(0, 255, 157, 0.4) 50%, 
+        rgba(75, 0, 130, 0.5) 75%,
+        rgba(0, 212, 255, 0) 100%
+    );
+    animation: auroraDrift 40s linear infinite;
+}
+
+@keyframes auroraDrift {
+    from { transform: translateX(-50%) skewX(-10deg); }
+    to { transform: translateX(0%) skewX(10deg); }
+}
+/* --- 1. The Sky Container (Full Screen) --- */
+.night-sky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2; /* Behind the forest and aurora */
+    pointer-events: none;
+}
+
+/* --- 2. Base Shooting Star Logic --- */
+/* --- 1. Horizontal Star Base --- */
+.shooting-star {
+    position: absolute;
+    height: 2px;
+    /* 90deg keeps the white head at the right and the tail trailing left */
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff);
+    filter: drop-shadow(0 0 6px #fff);
+    opacity: 0;
+    width: 0;
+    pointer-events: none;
+    animation: horizontalShooting 5s linear infinite;
+}
+
+/* --- 2. Random Vertical Placement --- */
+.shooting-star:nth-child(1) { top: 10%; left: -10%; animation-delay: 1s; }
+.shooting-star:nth-child(2) { top: 25%; left: -10%; animation-delay: 4s; animation-duration: 7s; }
+.shooting-star:nth-child(3) { top: 45%; left: -10%; animation-delay: 8s; }
+.shooting-star:nth-child(4) { top: 65%; left: -10%; animation-delay: 3s; animation-duration: 4s; }
+.shooting-star:nth-child(5) { top: 15%; left: -10%; animation-delay: 12s; }
+
+/* --- 3. The Horizontal Animation --- */
+@keyframes horizontalShooting {
+    0% {
+        transform: translateX(0) translateY(0) rotate(0deg);
+        width: 0;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        width: 180px; /* Long horizontal tail */
+    }
+    20% {
+        width: 180px;
+    }
+    100% {
+        /* Move 100% across the screen width with very little downward drop */
+        transform: translateX(110vw) translateY(50px) rotate(0deg); 
+        width: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes tail {
+    0% { width: 0; }
+    30% { width: 100px; }
+    100% { width: 0; }
+}
+
+@keyframes shooting {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(800px); }
+}

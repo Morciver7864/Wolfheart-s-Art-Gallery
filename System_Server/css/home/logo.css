@@ -1,0 +1,68 @@
+.header-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; 
+    flex-wrap: wrap;
+}
+.website-logo {
+    width: 80px; /* Scaled to match Gallery's professional look */
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+.main-quote {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.7);
+}
+/* --- 4. Interactive Face Logo (Clickable to About) --- */
+.face-logo-container {
+    margin: 30px 0;
+    display: inline-block;
+}
+.face-logo {
+    cursor: pointer;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #b3a5ef;
+    object-fit: cover;
+    background-color: #1e293b; /* Fallback for broken image links */
+    box-shadow: 0 0 20px rgba(179, 165, 239, 0.4);
+    transition: all 0.3s ease;
+}
+.face-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 30px rgba(179, 165, 239, 0.7);
+    border-color: white;
+}
+.glass-background-pane {
+    background: rgba(119, 69, 126, 0.6); /* Deep blue-tinted glass */
+    backdrop-filter: blur(12px); /* Frosted effect */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(179, 165, 239, 0.3); /* Subtle purple border */
+    border-radius: 24px;
+    padding: 40px;
+    margin: 40px auto;
+    width: 90%;
+    max-width: 1000px;
+    
+    /* The Glow Effect */
+    box-shadow: 
+        0 8px 32px 0 rgba(0, 0, 0, 0.8), /* Outer shadow for depth */
+        0 0 15px rgba(179, 165, 239, 0.2), /* Soft purple outer glow */
+        inset 0 0 15px rgba(179, 165, 239, 0.1); /* Subtle inner glow */
+        
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ensure your text stays crisp against the glass */
+.glass-background-pane h1, 
+.glass-background-pane p {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+.glass-background-pane:first-of-type {
+    margin-top: 100px !important; 
+}

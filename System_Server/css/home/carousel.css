@@ -1,0 +1,489 @@
+/* --- 1. Main Container --- */
+.carousel-container {
+    width: 100%;
+    overflow: hidden; /* Clips the overflow of the moving track */
+    background: rgba(0, 0, 0, 0.2); 
+    padding: 40px 0;
+    margin-top: 50px;
+    position: relative;
+}
+
+/* --- 2. The Dynamic Track --- */
+.carousel-track {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    justify-content: flex-start;
+    cursor: grab;
+    will-change: transform;
+    /* CRITICAL: Transition must be 'none' or '0s' so JS dragging doesn't lag */
+    transition: none; 
+}
+
+/* State when user is clicking/holding */
+.carousel-track.grabbing {
+    cursor: grabbing;
+    user-select: none; /* Prevents text/image highlighting while spinning */
+}
+
+/* --- 3. Artwork Item Styling --- */
+.carousel-item {
+    position: relative;
+    width: 250px;
+    height: 180px;
+    margin: 0 10px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 1.5px solid rgba(179, 165, 239, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    /* Prevents the browser from trying to "drag" the image file itself */
+    pointer-events: none; 
+}
+
+/* --- 4. Lore/Title Overlay --- */
+.item-info {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    transition: bottom 0.3s ease-in-out;
+}
+
+.item-info h3 {
+    font-size: 0.9rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Hover pop-up effect */
+.carousel-item:hover img {
+    transform: scale(1.08);
+    border-color: #b3a5ef;
+}
+
+.carousel-item:hover .item-info {
+    bottom: 0;
+}
+
+/* --- 5. Zoom Overlay (The Art Viewer) --- */
+.zoom-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.zoom-content {
+    display: flex;
+    width: 85%;
+    max-width: 1000px;
+    height: 70vh;
+    background: rgba(15, 20, 30, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(179, 165, 239, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: none; border: none;
+    color: white; font-size: 2rem;
+    cursor: pointer; z-index: 10;
+}
+
+.zoom-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.zoom-left img {
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.zoom-right {
+    flex: 1;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+}
+
+.zoom-right h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-family: 'Serif', Georgia, serif;
+}
+
+.divider {
+    width: 60px;
+    height: 3px;
+    background: #b3a5ef;
+    margin-bottom: 20px;
+}
+
+#zoom-description {
+    line-height: 1.6;
+    font-family: 'Lexend', sans-serif;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- 6. Enhanced Mobile Responsiveness --- */
+@media (max-width: 767px) {
+    /* Make the dark background fill more of the screen */
+    .zoom-content {
+        flex-direction: column;
+        width: 100%;       /* Full width */
+        height: 100vh;     /* Full height */
+        max-height: 100vh;
+        border-radius: 0;  /* Remove rounded corners for full-screen feel */
+        border: none;
+        overflow-y: auto;  /* Allow the whole modal to scroll if content is long */
+    }
+
+    /* Adjust the image container */
+    .zoom-left {
+        flex: none;        /* Don't grow/shrink based on flex */
+        width: 100%;
+        height: 45vh;      /* Give image 45% of the screen height */
+        padding: 40px 20px 20px 20px;
+        background: #000;
+    }
+
+    .zoom-left img {
+        height: 100%;
+        width: auto;       /* Keep aspect ratio */
+        object-fit: contain;
+    }
+
+    /* Adjust the text container */
+    .zoom-right {
+        width: 100% !important; /* Force full width */
+        padding: 30px 25px;
+        text-align: left;       /* Left align looks cleaner for long descriptions */
+        flex: 1;
+        overflow-y: visible;    /* Content flows naturally */
+    }
+
+    /* Typography adjustments for mobile */
+    .zoom-right h1 {
+        font-size: 1.8rem;
+        margin-top: 0;
+    }
+
+    #zoom-description {
+        font-size: 0.95rem;
+        padding-bottom: 40px;   /* Extra space at bottom for scrolling */
+    }
+
+    /* Reposition Close Button for thumb-friendly reach */
+    .close-btn {
+        top: 10px;
+        right: 15px;
+        font-size: 2.5rem;
+        text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    /* Fix the divider on mobile */
+    .divider {
+        width: 100%;
+        margin: 15px 0;
+    }
+}
+.carousel-settings-pane {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    align-items: center;
+    background: rgba(20, 25, 40, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 1px solid rgba(179, 165, 239, 0.3);
+    margin: 20px auto;
+    width: fit-content;
+    color: #b3a5ef;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.9rem;
+}
+
+.setting-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Custom Range Input Styling */
+input[type="range"] {
+    accent-color: #b3a5ef;
+    cursor: pointer;
+}
+
+/* Switch Styling */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #4a4a4a;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px; width: 14px;
+    left: 3px; bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.divider {
+    width: 100%; /* Stretch to the full width of the container */
+    height: 1px;
+    background: linear-gradient(to right, #b3a5ef, transparent); /* Fades out at the end */
+    margin: 15px 0;
+    box-shadow: 0 0 8px rgba(179, 165, 239, 0.5);
+}
+
+/* The Date - Cleaned up */
+#zoom-date {
+    color: #ffcc00;
+    font-size: 0.85rem;
+    margin: 5px 0;
+    font-family: 'Lexend', sans-serif;
+    letter-spacing: 1px;
+    /* Removed border-left and padding-left to kill the vertical line */
+}
+
+/* Ensure the right panel allows the divider to breathe */
+.zoom-right {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    width: 40%;
+    overflow-y: auto;
+}
+/* --- Optimized Close Button --- */
+.zoom-content {
+    position: relative; 
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px; 
+    left: 15px; /* Moved from right to left */
+    right: auto; /* Reset any previous right positioning */
+    
+    width: 42px; /* Slightly larger for easier thumb-tapping */
+    height: 42px;
+    background: rgba(0, 0, 0, 0.5); /* Slightly darker for better contrast */
+    border: 1px solid rgba(179, 165, 239, 0.6); 
+    border-radius: 50%;
+    color: white;
+    font-size: 1.6rem;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s ease-in-out;
+    backdrop-filter: blur(4px); /* Makes the button "pop" against the art */
+}
+
+.close-btn:hover {
+    background: rgba(255, 95, 95, 0.3); /* Soft red tint on hover */
+    border-color: #ff5f5f;
+    transform: scale(1.1);
+}
+
+/* Mobile Tweak */
+@media (max-width: 767px) {
+    .close-btn {
+        top: 20px; /* Push it down slightly further on mobile */
+        left: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Dim the background */
+    z-index: 998; /* Just below the sidebar (999) */
+}
+
+/* Show the overlay only when sidebar is active */
+.sidebar-active .sidebar-overlay {
+    display: block;
+}
+input:checked + .slider { background-color: #324b7a; }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Prevent images from blocking the click event in the carousel */
+.carousel-item img {
+    pointer-events: none; 
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* Ensure the loading state has a visible size */
+.carousel-item.loading {
+    min-height: 180px;
+    background: #151921 linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+/* The Scroll Fix: Ensure the body isn't locked */
+body {
+    overflow-y: auto !important;
+    height: auto !important;
+}
+/* The Animation for the Skeleton Shimmer */
+@keyframes skeleton-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Ensure the zoom-overlay hides properly when not active */
+.zoom-overlay[style*="display: none"] {
+    display: none !important;
+}
+
+/* Smooth transition for images when they reveal */
+.carousel-item img.loaded {
+    opacity: 1 !important;
+}
+
+.loading-text {
+    padding: 20px;
+    color: #b3a5ef;
+    width: 100%;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace; /* Terminal vibe */
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    
+    /* Apply the animations */
+    animation: pulse-glow 2s infinite ease-in-out, typing-blink 0.8s infinite step-end;
+    text-shadow: 0 0 10px rgba(179, 165, 239, 0.5);
+}
+
+/* The "Breathing" Glow */
+@keyframes pulse-glow {
+    0%, 100% { 
+        opacity: 0.4; 
+        text-shadow: 0 0 5px rgba(179, 165, 239, 0.2);
+    }
+    50% { 
+        opacity: 1; 
+        text-shadow: 0 0 20px rgba(179, 165, 239, 0.8), 0 0 30px rgba(179, 165, 239, 0.4);
+    }
+}
+
+/* The Cursor Blink effect at the end */
+@keyframes typing-blink {
+    from, to { border-right: 2px solid transparent; }
+    50% { border-right: 2px solid #b3a5ef; }
+}
+
+.carousel-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(179, 165, 239, 0.2);
+    box-shadow: 0 0 15px rgba(179, 165, 239, 0.5);
+    animation: scan-line 4s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes scan-line {
+    0% { top: 0%; opacity: 0; }
+    5% { opacity: 1; }
+    95% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.loading-text {
+    padding: 20px;
+    color: #b3a5ef;
+    width: 100%;
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: pulse-glow 2s infinite ease-in-out;
+}
+
+/* The Animated Dots */
+.loading-text::after {
+    content: ".";
+    display: inline-block;
+    width: 20px; /* Prevents the text from jumping when dots change */
+    text-align: left;
+    animation: dots-cycle 1.5s infinite steps(4);
+}
+
+@keyframes dots-cycle {
+    0%   { content: ""; }
+    25%  { content: "."; }
+    50%  { content: ".."; }
+    75%  { content: "..."; }
+    100% { content: ""; }
+}
+
+/* Keep your pulse animation for that extra glow */
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; text-shadow: 0 0 15px #b3a5ef; }
+}

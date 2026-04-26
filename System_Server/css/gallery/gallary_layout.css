@@ -1,0 +1,139 @@
+/* --- 3. Pinterest/DeviantArt Masonry Logic --- */
+.grid-container {
+    column-count: 4; 
+    column-gap: 15px;
+    padding: 20px 40px;
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    min-height: 500px; /* Ensure there is space to scroll even if loading */
+}
+
+.gallery-item {
+    display: inline-block; 
+    width: 100%;
+    margin-bottom: 15px; 
+    break-inside: avoid;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+}
+
+.gallery-img {
+    width: 100%;
+    height: auto; 
+    display: block;
+    opacity: 0.9; 
+    transition: 0.5s ease;
+}
+
+/* --- 4. Hover Effects (The "Slide-Up" Title) --- */
+.gallery-item figcaption {
+    position: absolute;
+    bottom: -100%; /* Hidden initially */
+    left: 0;
+    width: 100%;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9)); 
+    color: white;
+    padding: 20px 15px 15px;
+    text-align: center;
+    transition: bottom 0.4s ease-in-out;
+    font-family: 'Comic Neue', cursive;
+    pointer-events: none; 
+    z-index: 2;
+}
+
+.gallery-item:hover figcaption {
+    bottom: 0; /* Slide up on hover */
+}
+
+.gallery-item:hover .gallery-img {
+    transform: scale(1.08); /* Slight zoom on image */
+    opacity: 1;
+}
+
+/* --- 5. Responsive Columns --- */
+@media (max-width: 1200px) {
+    .grid-container { column-count: 3; }
+}
+
+/* Tablet view */
+@media (max-width: 800px) {
+    .grid-container { 
+        column-count: 2; 
+        padding: 20px;
+    }
+}
+
+/* Phone view - THE FIX */
+@media (max-width: 600px) {
+    .grid-container { 
+        /* Change from 1 to 2 or 4 to see more images at once */
+        column-count: 2; 
+        column-gap: 10px;
+        padding: 10px; 
+    }
+    
+    .gallery-item {
+        margin-bottom: 10px;
+    }
+
+    /* Optional: Make the text smaller so it fits the tiny boxes */
+    .gallery-item figcaption {
+        font-size: 0.8rem;
+        padding: 10px 5px;
+    }
+}
+/* --- Skeleton Loading Animation --- */
+@keyframes skeleton-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.gallery-item.loading {
+    min-height: 250px; 
+    background: #1a1a2e linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.05) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+/* Hide the image until it's fully loaded so the skeleton shows */
+.gallery-img {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease;
+}
+
+/* Class to trigger when image is ready */
+.gallery-img.loaded {
+    opacity: 1;
+}
+
+/* Add this to your CSS to make the modal skeleton look right */
+.view-image-panel.loading {
+    background: #0f0f1a linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.05) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+/* If the container has the 'icons-only' class, disable the hover titles */
+.grid-container.icons-only .gallery-item figcaption {
+    display: none !important;
+}
+
+/* Also disable the image zoom if you want it to feel more like a static grid */
+.grid-container.icons-only .gallery-item:hover .gallery-img {
+    transform: none;
+}

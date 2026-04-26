@@ -1,0 +1,289 @@
+/* --- Global Styles & Reset --- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a14;
+    color: white;
+    font-family: 'Lexend', Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- Navbar Core --- */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    /* This gradient makes it fade into the background instead of a hard line */
+    background: linear-gradient(to bottom, rgba(10, 10, 20, 0.95), rgba(10, 10, 20, 0.7));
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(179, 165, 239, 0.2);
+    padding: 5px 0; /* Keeps the navbar slim */
+}
+
+.navbar ul {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    list-style: none;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    gap: 10px;
+    margin: 0;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar a:hover {
+    color: #b3a5ef;
+    text-shadow: 0 0 8px rgba(179, 165, 239, 0.8);
+    transform: translateY(-3px); 
+}
+
+/* --- Settings & Modals --- */
+.settings-modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* This is the class the JavaScript toggles */
+.settings-modal.active-modal {
+    display: flex !important;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;         /* Vertically centers icon, text, and X */
+    justify-content: space-between; /* Pushes Title to left, X to right */
+    width: 100%;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(179, 165, 239, 0.2);
+}
+
+/* Helper to keep Icon and Text stuck together */
+.header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;                  /* Space between gear icon and text */
+}
+
+.settings-header h3 {
+    display: inline-flex;    /* Allows the heading to sit nicely in the header */
+    align-items: center;     /* This is the magic line for vertical centering */
+    gap: 10px;               /* Space between the icon and "LumaNexus" */
+    margin: 0;
+    line-height: 1;          /* Prevents extra spacing above/below text */
+    color: #b3a5ef;
+    text-transform: uppercase;
+    font-family: 'Lexend', sans-serif;
+}
+.setting-item-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.setting-item-stack input[type="range"] {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    cursor: pointer;
+    /* This removes the default browser look for a cleaner vibe */
+    accent-color: #4e4eaf; 
+}
+
+/* --- Custom Futuristic Slider --- */
+input[type="range"] {
+    cursor: pointer;
+    accent-color: #4e4eaf; /* Matches your theme */
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(179, 165, 239, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(179, 165, 239, 0.2);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background: #b3a5ef;
+    cursor: pointer;
+    margin-top: -7px; /* Centers thumb on track */
+    box-shadow: 0 0 15px #b3a5ef;
+    transition: 0.3s;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px #b3a5ef;
+}
+
+/* --- Glow Buttons --- */
+.ui-button {
+    background: rgba(179, 165, 239, 0.1);
+    border: 1px solid rgba(179, 165, 239, 0.5);
+    color: #b3a5ef;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.ui-button:hover {
+    background: #b3a5ef;
+    color: #0a0a14;
+    box-shadow: 0 0 20px rgba(179, 165, 239, 0.6);
+}
+
+/* --- THE TOGGLE FIX: Icons Only Mode --- */
+.nav-menu.icons-only .nav-text {
+    display: none !important;
+}
+
+.nav-menu.icons-only a {
+    justify-content: center;
+    padding: 10px 15px;
+}
+
+/* --- Desktop Navbar Fixes --- */
+.navbar a.active {
+    color: #ffcc00 !important; 
+    font-weight: 700;
+    /* The active "glow" effect */
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.8),
+                 0 0 20px rgba(255, 204, 0, 0.4);
+    border-bottom: 2px solid #ffcc00;
+}
+
+/* CRITICAL: Ensure hamburger is hidden on desktop */
+.menu-icon {
+    display: none !important;
+}
+
+/* --- Mobile Sidebar Fixes --- */
+@media screen and (max-width: 768px) {
+    /* Ensure the hamburger button is ALWAYS on top */
+    .menu-icon {
+        display: block !important; 
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10002 !important; /* Higher than the sidebar */
+        cursor: pointer;
+        color: white;
+    }
+
+    /* The Sidebar Drawer */
+    .navbar ul {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hidden off-screen */
+        width: 250px;
+        height: 100vh;
+        background: #0a0a14 !important; /* Solid color so it's not transparent */
+        padding-top: 80px; 
+        transition: right 0.3s ease-in-out;
+        z-index: 10001 !important; /* Top layer */
+        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* THE FIX: Ensure this class name matches your JS toggle */
+    .navbar ul.active {
+        right: 0 !important;
+    }
+}
+
+/* --- Neon Purple Glow for Buttons --- */
+.icon-btn, .ui-button {
+    background: rgba(179, 165, 239, 0.1);
+    border: 1px solid rgba(179, 165, 239, 0.5);
+    color: #b3a5ef;
+    box-shadow: 0 0 10px rgba(179, 165, 239, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.icon-btn:hover {
+    box-shadow: 0 0 20px rgba(179, 165, 239, 0.8);
+    background: rgba(179, 165, 239, 0.2);
+}
+
+/* --- Layout Alignment --- */
+.setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Ensure the volume slider looks like the speed slider */
+#volume-slider {
+    flex-grow: 1;
+}
+
+.settings-header {
+    position: relative; /* Allows the button to be positioned absolutely to this header */
+}
+
+.close-btn {
+    position: static;         /* Changed from absolute to work with flexbox */
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 5px;
+    line-height: 1;
+}
+
+.close-btn:hover {
+    color: #ff5f5f; 
+    transform: rotate(90deg); /* Cool subtle animation */
+}
+.settings-header h3 .material-symbols-outlined {
+    font-size: 30px;         /* Adjust this to match your text size */
+    vertical-align: middle;  /* Backup alignment */
+}
