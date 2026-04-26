@@ -290,3 +290,25 @@ header,
     0% { transform: translateX(0); }
     100% { transform: translateX(800px); }
 }
+/* --- iPad & Tablet Fixes --- */
+@media (max-width: 1024px) {
+    body.body_bg {
+        /* Disable the slowDrift on mobile to prevent zooming/stretching */
+        animation: none; 
+        background-attachment: scroll; /* iOS handles 'scroll' much better than 'fixed' */
+    }
+
+    .background-forest {
+        /* Lower the trees on iPad so they don't cover the welcome text */
+        height: 40vh; 
+    }
+
+    .tree:nth-child(3n+1) { height: 45vh; }
+    .tree:nth-child(3n+2) { height: 35vh; }
+    .tree:nth-child(3n)   { height: 30vh; }
+
+    /* Fix the navigation labels appearing mentioned in your screenshot */
+    .navigation-bar span {
+        display: none; /* Only show icons on smaller iPad screens if it's crowded */
+    }
+}
