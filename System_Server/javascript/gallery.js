@@ -22,10 +22,92 @@ document.addEventListener("DOMContentLoaded", () => {
     const db = getFirestore(app);
 
     let myArtworks = [];
+    let filteredArtworks = [];
     let isAdmin = false;
     let logoutTimer; // Only one declaration needed
+    let currentPage = 1;
+    const PAGE_SIZE = 12;
+    let currentSearchTerm = "";
 
     const container = document.getElementById('art-gallery-container');
+    const pagination = document.getElementById('gallery-pagination');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const pageNumbers = document.getElementById('page-numbers');
+    const uploadModal = document.getElementById('upload-modal');
+    const submitBtn = document.getElementById('submit-new-image');
+    const titleInput = document.getElementById('new-image-title');
+    const dateInput = document.getElementById('new-image-date');
+    const descInput = document.getElementById('new-image-desc');
+    const fileInput = document.getElementById('new-image-file');
+    const fileInputContainer = document.getElementById('file-input-container');
+    const modalTitle = document.getElementById('modal-title');
+
+    function resetUploadFormToCreateMode() {
+        if (modalTitle) modalTitle.innerText = "Add New Masterpiece";
+        if (titleInput) titleInput.value = "";
+        if (dateInput) dateInput.value = "";
+        if (descInput) descInput.value = "";
+        if (fileInput) fileInput.value = "";
+        if (fileInputContainer) fileInputContainer.style.display = "block";
+        if (submitBtn) {
+            submitBtn.innerText = "Submit";
+            submitBtn.removeAttribute('data-edit-id');
+            submitBtn.disabled = false;
+        }
+    }
+
+    async function compressImageToDataUrl(file) {
+        const MAX_BASE64_LENGTH = 850000;
+        const MIN_QUALITY = 0.45;
+        let quality = 0.85;
+        let maxDimension = 1600;
+
+        const objectUrl = URL.createObjectURL(file);
+        const img = await new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = () => reject(new Error("Failed to load image for compression."));
+            image.src = objectUrl;
+        });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+            URL.revokeObjectURL(objectUrl);
+            throw new Error("Canvas is not available in this browser.");
+        }
+
+        while (true) {
+            const ratio = Math.min(1, maxDimension / Math.max(img.width, img.height));
+            const width = Math.max(1, Math.round(img.width * ratio));
+            const height = Math.max(1, Math.round(img.height * ratio));
+            canvas.width = width;
+            canvas.height = height;
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL("image/jpeg", quality);
+            if (dataUrl.length <= MAX_BASE64_LENGTH) {
+                URL.revokeObjectURL(objectUrl);
+                return dataUrl;
+            }
+
+            if (quality > MIN_QUALITY) {
+                quality = Math.max(MIN_QUALITY, quality - 0.1);
+                continue;
+            }
+
+            if (maxDimension > 900) {
+                maxDimension = Math.round(maxDimension * 0.85);
+                quality = 0.85;
+                continue;
+            }
+
+            URL.revokeObjectURL(objectUrl);
+            throw new Error("Image is still too large after compression. Please choose a smaller file.");
+        }
+    }
 
     /* --- 2. AUTO-LOGOUT LOGIC (STRICT) --- */
     async function performAutoLogout() {
@@ -57,7 +139,7 @@ async function loadArtFromFirebase() {
         const q = query(collection(db, "artworks"), orderBy("timestamp", "desc"));
         const snapshot = await getDocs(q);
         myArtworks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderGallery(); // Now this will find the function below
+        applySearchFilter();
     } catch (error) { 
         console.error("Load error:", error); 
     }
@@ -66,16 +148,19 @@ async function loadArtFromFirebase() {
 function renderGallery() {
     const container = document.getElementById('art-gallery-container');
     container.innerHTML = ""; // Clear existing items before re-rendering
+    const pageItems = getCurrentPageItems();
 
-    myArtworks.forEach((art) => {
+    pageItems.forEach((art) => {
         const item = document.createElement('div');
         item.className = 'gallery-item loading'; 
         item.setAttribute('data-title', art.search || "");
 
         // Define adminControls or a fallback
         const adminControls = `
-            <button onclick="openEditModal('${art.id}')">Edit</button>
-            <button onclick="removeArt('${art.id}')">Delete</button>
+            <div class="admin-actions">
+                <button type="button" class="admin-btn edit-btn" data-id="${art.id}" title="Edit">✎</button>
+                <button type="button" class="admin-btn delete delete-btn" data-id="${art.id}" title="Delete">🗑</button>
+            </div>
         `;
 
         item.innerHTML = `
@@ -105,6 +190,62 @@ function renderGallery() {
         img.onclick = () => openGalleryView(art);
         container.appendChild(item);
     });
+    renderPagination();
+}
+
+function getCurrentPageItems() {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredArtworks.slice(start, start + PAGE_SIZE);
+}
+
+function getTotalPages() {
+    return Math.max(1, Math.ceil(filteredArtworks.length / PAGE_SIZE));
+}
+
+function renderPagination() {
+    if (!pagination || !pageNumbers || !prevPageBtn || !nextPageBtn) return;
+    const totalPages = getTotalPages();
+    pagination.style.display = "flex";
+    prevPageBtn.disabled = currentPage <= 1;
+    nextPageBtn.disabled = currentPage >= totalPages;
+
+    pageNumbers.innerHTML = "";
+    const pagesToRender = [];
+    if (totalPages <= 7) {
+        for (let page = 1; page <= totalPages; page++) pagesToRender.push(page);
+    } else if (currentPage <= 3) {
+        pagesToRender.push(1, 2, 3, 4, "...", totalPages);
+    } else if (currentPage >= totalPages - 2) {
+        pagesToRender.push(1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+    } else {
+        pagesToRender.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+    }
+
+    pagesToRender.forEach((page) => {
+        if (page === "...") {
+            const dots = document.createElement("span");
+            dots.className = "page-ellipsis";
+            dots.textContent = "...";
+            pageNumbers.appendChild(dots);
+            return;
+        }
+
+        const pageBtn = document.createElement("button");
+        pageBtn.type = "button";
+        pageBtn.className = `page-btn ${page === currentPage ? "active" : ""}`;
+        pageBtn.setAttribute("data-page", String(page));
+        pageBtn.textContent = String(page);
+        pageNumbers.appendChild(pageBtn);
+    });
+}
+
+function applySearchFilter() {
+    const term = currentSearchTerm.trim().toLowerCase();
+    filteredArtworks = term
+        ? myArtworks.filter((art) => (art.search || "").includes(term))
+        : [...myArtworks];
+    currentPage = 1;
+    renderGallery();
 }
 
     /* --- 4. GLOBAL FUNCTIONS --- */
@@ -132,114 +273,187 @@ function renderGallery() {
     };
 
     /* --- 5. AUTHENTICATION & LOGIN --- */
-    onAuthStateChanged(auth, (user) => {
-        isAdmin = !!user;
-        const btn = document.getElementById('admin-lock');
-        if (btn) {
-            btn.innerHTML = user ? "🔓" : "🔒";
-            btn.style.backgroundColor = user ? "#324b7a" : "#4a4a4a";
-        }
-        if (isAdmin) {
-            resetLogoutTimer();
-        } else {
-            clearTimeout(logoutTimer);
-        }
-        loadArtFromFirebase();
-    });
+/* --- 5. AUTHENTICATION & LOGIN (UPDATED) --- */
+onAuthStateChanged(auth, (user) => {
+    isAdmin = !!user;
+    const btn = document.getElementById('admin-lock');
+    const adminControls = document.getElementById('admin-controls');
 
-    document.getElementById('admin-lock')?.addEventListener('click', async () => {
-        if (isAdmin) {
-            if (confirm("Logout?")) {
-                await signOut(auth);
-                window.location.reload(); // Force refresh to clear UI
-            }
+    // Update the Lock Icon
+    if (btn) {
+        btn.innerHTML = user ? "🔓" : "🔒";
+        btn.style.backgroundColor = user ? "#324b7a" : "#4a4a4a";
+    }
+
+    if (isAdmin) {
+        // Show the admin configuration panel
+        if (adminControls) adminControls.style.display = 'block';
+        
+        // AUTO-OPEN: Reveal the Lore form immediately upon login
+        if (uploadModal) {
+            uploadModal.style.display = 'flex';
+            resetUploadFormToCreateMode();
+        }
+        
+        resetLogoutTimer();
+    } else {
+        // Hide admin UI and form if logged out
+        if (adminControls) adminControls.style.display = 'none';
+        if (uploadModal) uploadModal.style.display = 'none';
+        
+        clearTimeout(logoutTimer);
+    }
+    
+    loadArtFromFirebase();
+});
+
+/* --- Keep your existing admin-lock click listener exactly as is --- */
+document.getElementById('admin-lock')?.addEventListener('click', async () => {
+    if (isAdmin) {
+        if (confirm("Logout?")) {
+            await signOut(auth);
+            window.location.reload(); 
+        }
+        return;
+    }
+    let email = prompt("Admin Email:");
+    if (email?.toUpperCase() === "RESET") {
+        await sendPasswordResetEmail(auth, "morciver7864@gmail.com");
+        return alert("Reset sent!");
+    }
+    let pass = prompt("Password:");
+    if (email && pass) {
+        await signInWithEmailAndPassword(auth, email, pass)
+            .then(() => alert("Welcome back, Morc!"))
+            .catch(e => alert("Login Failed: " + e.message));
+    }
+});
+
+    // Reliable delegated handlers for dynamically-rendered admin buttons.
+    container?.addEventListener('click', (event) => {
+        const editBtn = event.target.closest('.edit-btn');
+        if (editBtn) {
+            event.stopPropagation();
+            window.openEditModal(editBtn.dataset.id);
             return;
         }
-        let email = prompt("Admin Email:");
-        if (email?.toUpperCase() === "RESET") {
-            await sendPasswordResetEmail(auth, "morciver7864@gmail.com");
-            return alert("Reset sent!");
+
+        const deleteBtn = event.target.closest('.delete-btn');
+        if (deleteBtn) {
+            event.stopPropagation();
+            window.removeArt(deleteBtn.dataset.id);
         }
-        let pass = prompt("Password:");
-        if (email && pass) {
-            await signInWithEmailAndPassword(auth, email, pass)
-                .then(() => alert("Welcome back, Morc!"))
-                .catch(e => alert("Login Failed: " + e.message));
-        }
+    });
+
+    const editModeBtn = document.getElementById('edit-mode-btn');
+    const deleteModeBtn = document.getElementById('delete-mode-btn');
+    editModeBtn?.addEventListener('click', () => {
+        container?.classList.toggle('show-admin-actions');
+    });
+    deleteModeBtn?.addEventListener('click', () => {
+        container?.classList.toggle('show-admin-actions');
     });
 
     /* --- 6. UPLOAD / UPDATE LOGIC --- */
     document.getElementById('show-upload-icon')?.addEventListener('click', () => {
         if (!isAdmin) return alert("Admin login required.");
-        document.getElementById('modal-title').innerText = "Add New Masterpiece";
-        document.getElementById('new-image-title').value = "";
-        document.getElementById('new-image-date').value = "";
-        document.getElementById('new-image-desc').value = "";
-        document.getElementById('file-input-container').style.display = "block";
-        const submitBtn = document.getElementById('submit-new-image');
-        submitBtn.innerText = "Submit";
-        submitBtn.removeAttribute('data-edit-id');
-        document.getElementById('upload-modal').style.display = 'flex';
+        resetUploadFormToCreateMode();
+        if (uploadModal) uploadModal.style.display = 'flex';
     });
 
     document.getElementById('submit-new-image')?.addEventListener('click', async () => {
-        const title = document.getElementById('new-image-title').value;
-        const date = document.getElementById('new-image-date').value;
-        const desc = document.getElementById('new-image-desc').value;
-        const editId = document.getElementById('submit-new-image').getAttribute('data-edit-id');
+        if (!isAdmin) return alert("Admin login required.");
+        const title = titleInput?.value?.trim() || "";
+        const date = dateInput?.value || "";
+        const desc = descInput?.value || "";
+        const editId = submitBtn?.getAttribute('data-edit-id');
         if (!title) return alert("Please provide a title.");
 
-        if (editId) {
-            await updateDoc(doc(db, "artworks", editId), {
-                title, search: title.toLowerCase(), date, description: desc
-            });
-            location.reload();
-        } else {
-            const file = document.getElementById('new-image-file').files[0];
-            if (!file) return alert("Choose an image.");
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async (e) => {
+        if (submitBtn) submitBtn.disabled = true;
+        try {
+            if (editId) {
+                await updateDoc(doc(db, "artworks", editId), {
+                    title, search: title.toLowerCase(), date, description: desc
+                });
+                location.reload();
+            } else {
+                const file = fileInput?.files?.[0];
+                if (!file) {
+                    if (submitBtn) submitBtn.disabled = false;
+                    return alert("Choose an image.");
+                }
+                const compressedDataUrl = await compressImageToDataUrl(file);
                 await addDoc(collection(db, "artworks"), {
-                    file: e.target.result, title, search: title.toLowerCase(),
+                    file: compressedDataUrl, title, search: title.toLowerCase(),
                     date, description: desc, timestamp: Date.now()
                 });
                 location.reload();
-            };
+            }
+        } catch (error) {
+            if (submitBtn) submitBtn.disabled = false;
+            alert("Failed to save artwork: " + error.message);
         }
     });
 
     /* --- 7. SEARCH & UI TOGGLES --- */
 document.getElementById('art-search')?.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll('.gallery-item').forEach(item => {
-        const artTitle = item.getAttribute('data-title') || "";
-        item.style.display = artTitle.includes(term) ? "inline-block" : "none";
-    });
+    currentSearchTerm = e.target.value || "";
+    applySearchFilter();
 });
 
-    document.getElementById('close-upload-modal').onclick = () => document.getElementById('upload-modal').style.display = 'none';
+prevPageBtn?.addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage -= 1;
+        renderGallery();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+});
+
+nextPageBtn?.addEventListener('click', () => {
+    const totalPages = getTotalPages();
+    if (currentPage < totalPages) {
+        currentPage += 1;
+        renderGallery();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+});
+
+pageNumbers?.addEventListener('click', (event) => {
+    const btn = event.target.closest('.page-btn');
+    if (!btn) return;
+    const targetPage = parseInt(btn.dataset.page, 10);
+    if (!Number.isNaN(targetPage) && targetPage !== currentPage) {
+        currentPage = targetPage;
+        renderGallery();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+});
+
+    document.getElementById('close-upload-modal').onclick = () => {
+        if (uploadModal) uploadModal.style.display = 'none';
+        resetUploadFormToCreateMode();
+    };
     document.getElementById('close-viewer').onclick = () => document.getElementById('view-modal').style.display = 'none';
-    loadArtFromFirebase();
 });
 
 // Sidebar logic outside of DOMContentLoaded is fine as long as elements exist
 document.addEventListener('click', function(event) {
     const sidebar = document.getElementById('nav-links');
     const menuBtn = document.getElementById('menu-toggle');
-    const sideOverlay = document.getElementById('sidebar-overlay');
+    const sideOverlay = document.getElementById('overlay');
     if (sidebar && sidebar.classList.contains('active')) {
-        if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+        if (!sidebar.contains(event.target) && (!menuBtn || !menuBtn.contains(event.target))) {
             sidebar.classList.remove('active');
             if (sideOverlay) sideOverlay.classList.remove('active');
         }
     }
 });
 
-const sideOverlay = document.getElementById('sidebar-overlay');
+const sideOverlay = document.getElementById('overlay');
 if (sideOverlay) {
     sideOverlay.addEventListener('click', () => {
-        document.getElementById('nav-links').classList.remove('active');
+        const navLinks = document.getElementById('nav-links');
+        if (navLinks) navLinks.classList.remove('active');
         sideOverlay.classList.remove('active');
     });
 }

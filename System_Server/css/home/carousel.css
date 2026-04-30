@@ -487,3 +487,56 @@ body {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; text-shadow: 0 0 15px #b3a5ef; }
 }
+
+/* --- Final responsive + skeleton overrides --- */
+.carousel-item.loading {
+    position: relative;
+    background: #151921;
+}
+
+.carousel-item.loading::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 255, 255, 0.09) 45%,
+        rgba(255, 255, 255, 0) 75%
+    );
+    background-size: 220% 100%;
+    animation: skeleton-shimmer 1.4s infinite linear;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.carousel-item.loading img {
+    opacity: 0 !important;
+}
+
+.carousel-item img.loaded {
+    opacity: 1 !important;
+}
+
+@media (max-width: 1024px) {
+    .carousel-item {
+        width: 220px;
+        height: 160px;
+    }
+}
+
+@media (max-width: 680px) {
+    .carousel-container {
+        padding: 26px 0;
+    }
+
+    .carousel-item {
+        width: 180px;
+        height: 130px;
+        margin: 0 7px;
+    }
+
+    .item-info h3 {
+        font-size: 0.82rem;
+    }
+}

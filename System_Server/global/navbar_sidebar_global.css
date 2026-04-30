@@ -1,4 +1,6 @@
-/* --- Global Styles & Reset --- */
+/* =========================================================
+   GLOBAL STYLES & RESET
+========================================================= */
 body {
     margin: 0;
     padding: 0;
@@ -8,18 +10,19 @@ body {
     overflow-x: hidden;
 }
 
-/* --- Navbar Core --- */
+/* =========================================================
+   NAVBAR (DESKTOP)
+========================================================= */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 9999;
-    /* This gradient makes it fade into the background instead of a hard line */
+    z-index: 999; 
     background: linear-gradient(to bottom, rgba(10, 10, 20, 0.95), rgba(10, 10, 20, 0.7));
     backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(179, 165, 239, 0.2);
-    padding: 5px 0; /* Keeps the navbar slim */
+    padding: 5px 0;
 }
 
 .navbar ul {
@@ -50,240 +53,344 @@ body {
     transform: translateY(-3px); 
 }
 
-/* --- Settings & Modals --- */
-.settings-modal {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    z-index: 10000;
-    justify-content: center;
-    align-items: center;
-}
-
-/* This is the class the JavaScript toggles */
-.settings-modal.active-modal {
-    display: flex !important;
-}
-
-.settings-header {
-    display: flex;
-    align-items: center;         /* Vertically centers icon, text, and X */
-    justify-content: space-between; /* Pushes Title to left, X to right */
-    width: 100%;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(179, 165, 239, 0.2);
-}
-
-/* Helper to keep Icon and Text stuck together */
-.header-left-group {
-    display: flex;
-    align-items: center;
-    gap: 12px;                  /* Space between gear icon and text */
-}
-
-.settings-header h3 {
-    display: inline-flex;    /* Allows the heading to sit nicely in the header */
-    align-items: center;     /* This is the magic line for vertical centering */
-    gap: 10px;               /* Space between the icon and "LumaNexus" */
-    margin: 0;
-    line-height: 1;          /* Prevents extra spacing above/below text */
-    color: #b3a5ef;
-    text-transform: uppercase;
-    font-family: 'Lexend', sans-serif;
-}
-.setting-item-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.setting-item-stack input[type="range"] {
-    width: 100%;
-    display: block;
-    margin-top: 10px;
-    cursor: pointer;
-    /* This removes the default browser look for a cleaner vibe */
-    accent-color: #4e4eaf; 
-}
-
-/* --- Custom Futuristic Slider --- */
-input[type="range"] {
-    cursor: pointer;
-    accent-color: #4e4eaf; /* Matches your theme */
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 6px;
-    background: rgba(179, 165, 239, 0.1);
-    border-radius: 10px;
-    border: 1px solid rgba(179, 165, 239, 0.2);
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 18px;
-    width: 18px;
-    border-radius: 50%;
-    background: #b3a5ef;
-    cursor: pointer;
-    margin-top: -7px; /* Centers thumb on track */
-    box-shadow: 0 0 15px #b3a5ef;
-    transition: 0.3s;
-}
-
-input[type="range"]:active::-webkit-slider-thumb {
-    transform: scale(1.2);
-    box-shadow: 0 0 25px #b3a5ef;
-}
-
-/* --- Glow Buttons --- */
-.ui-button {
-    background: rgba(179, 165, 239, 0.1);
-    border: 1px solid rgba(179, 165, 239, 0.5);
-    color: #b3a5ef;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-}
-
-.ui-button:hover {
-    background: #b3a5ef;
-    color: #0a0a14;
-    box-shadow: 0 0 20px rgba(179, 165, 239, 0.6);
-}
-
-/* --- THE TOGGLE FIX: Icons Only Mode --- */
-.nav-menu.icons-only .nav-text {
-    display: none !important;
-}
-
-.nav-menu.icons-only a {
-    justify-content: center;
-    padding: 10px 15px;
-}
-
-/* --- Desktop Navbar Fixes --- */
+/* Active nav link highlight */
 .navbar a.active {
     color: #ffcc00 !important; 
     font-weight: 700;
-    /* The active "glow" effect */
     text-shadow: 0 0 10px rgba(255, 204, 0, 0.8),
                  0 0 20px rgba(255, 204, 0, 0.4);
     border-bottom: 2px solid #ffcc00;
 }
 
-/* CRITICAL: Ensure hamburger is hidden on desktop */
+/* Icon-only mode for navbar labels */
+.navbar ul.icons-only .nav-text {
+    display: none;
+}
+
+.navbar ul.icons-only a {
+    min-width: 44px;
+    justify-content: center;
+    padding: 10px 12px;
+}
+
+.navbar ul.icons-only .nav-icon {
+    margin: 0;
+}
+
+/* =========================================================
+   MOBILE NAVBAR (SIDEBAR + HAMBURGER)
+========================================================= */
+
+/* Hide hamburger on desktop */
 .menu-icon {
     display: none !important;
 }
 
-/* --- Mobile Sidebar Fixes --- */
 @media screen and (max-width: 768px) {
-    /* Ensure the hamburger button is ALWAYS on top */
     .menu-icon {
         display: block !important; 
         position: fixed;
         top: 20px;
         right: 20px;
-        z-index: 10002 !important; /* Higher than the sidebar */
+        z-index: 10002 !important; /* Above sidebar */
         cursor: pointer;
         color: white;
     }
 
-    /* The Sidebar Drawer */
+    /* Sidebar drawer */
     .navbar ul {
         display: flex;
         flex-direction: column;
         position: fixed;
         top: 0;
-        right: -100%; /* Hidden off-screen */
+        right: -280px; /* Fixed width + shadow buffer */
         width: 250px;
         height: 100vh;
-        background: #0a0a14 !important; /* Solid color so it's not transparent */
+        background: #0a0a14 !important;
         padding-top: 80px; 
         transition: right 0.3s ease-in-out;
-        z-index: 10001 !important; /* Top layer */
+        z-index: 10001 !important;
         box-shadow: -5px 0 15px rgba(0,0,0,0.5);
     }
 
-    /* THE FIX: Ensure this class name matches your JS toggle */
+    /* Active sidebar */
     .navbar ul.active {
         right: 0 !important;
     }
 }
 
-/* --- Neon Purple Glow for Buttons --- */
-.icon-btn, .ui-button {
-    background: rgba(179, 165, 239, 0.1);
-    border: 1px solid rgba(179, 165, 239, 0.5);
-    color: #b3a5ef;
-    box-shadow: 0 0 10px rgba(179, 165, 239, 0.3);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.icon-btn:hover {
-    box-shadow: 0 0 20px rgba(179, 165, 239, 0.8);
-    background: rgba(179, 165, 239, 0.2);
-}
-
-/* --- Layout Alignment --- */
-.setting-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    gap: 20px;
-}
-
-.volume-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+/* =========================================================
+   SETTINGS MODAL (OVERLAY CONTAINER)
+========================================================= */
+.settings-modal {
+    display: none; /* Controlled by JS */
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
     width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(93, 233, 255, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 80% 30%, rgba(255, 77, 211, 0.14) 0%, transparent 50%),
+        rgba(2, 4, 15, 0.8);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Ensure the volume slider looks like the speed slider */
-#volume-slider {
-    flex-grow: 1;
+.settings-modal.active-modal {
+    display: flex !important;
+}
+
+/* =========================================================
+   SETTINGS CONTENT PANEL
+========================================================= */
+.settings-content {
+    width: min(580px, 96vw);
+    max-height: min(86vh, 760px);
+    overflow-y: auto;
+    color: #eef5ff;
+    background:
+        linear-gradient(160deg, rgba(17, 22, 54, 0.94), rgba(26, 10, 45, 0.94)),
+        rgba(14, 16, 42, 0.94);
+    border: 1px solid rgba(133, 237, 255, 0.38);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow:
+        0 0 0 1px rgba(255, 78, 210, 0.25) inset,
+        0 0 35px rgba(118, 81, 255, 0.35),
+        0 0 65px rgba(56, 219, 255, 0.25);
+}
+
+/* Custom Scrollbar for Settings */
+.settings-content::-webkit-scrollbar {
+    width: 5px;
+}
+.settings-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7f79ff, #4be8ff);
+    border-radius: 10px;
 }
 
 .settings-header {
-    position: relative; /* Allows the button to be positioned absolutely to this header */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(129, 231, 255, 0.2);
+}
+
+.settings-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #dff8ff;
+}
+
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.setting-item,
+.setting-item-stack {
+    background: linear-gradient(135deg, rgba(131, 102, 255, 0.12), rgba(57, 216, 255, 0.08));
+    border: 1px solid rgba(157, 150, 255, 0.22);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+}
+
+.setting-item-stack .setting-info,
+.setting-item .setting-info {
+    margin-bottom: 8px;
+}
+
+.setting-info strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #f3f7ff;
+}
+
+.setting-info p {
+    margin: 0;
+    color: #b7c3df;
+    font-size: 0.9rem;
+}
+
+.settings-body hr {
+    border: 0;
+    border-top: 1px solid rgba(149, 243, 255, 0.22);
+    margin: 0;
+}
+
+.volume-container input[type="range"],
+.setting-item-stack input[type="range"] {
+    width: 100%;
+    accent-color: #8b77ff;
+}
+
+/* =========================================================
+   ADMIN ACTION BUTTONS (EDIT / DELETE OVERLAY)
+========================================================= */
+.admin-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none; /* Prevents clicks when invisible */
+    transition: 0.3s ease;
+    z-index: 10;
+}
+
+/* Show on hover */
+.box:hover .admin-actions {
+    opacity: 1;
+    pointer-events: auto; /* Re-enable clicks on hover */
+}
+
+.admin-btn {
+    background: rgba(15, 10, 25, 0.8);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(179, 165, 239, 0.5);
+    color: #b3a5ef;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.admin-btn:hover {
+    background: #b3a5ef;
+    color: #0f0a19;
+    box-shadow: 0 0 15px #b3a5ef;
+}
+
+.admin-btn.delete:hover {
+    background: #ff4b4b;
+    border-color: #ff4b4b;
+    box-shadow: 0 0 15px #ff4b4b;
+    color: white;
+}
+
+/* =========================================================
+   FORM INPUTS, SLIDERS & BUTTONS (RETAINED LOGIC)
+========================================================= */
+input[type="text"], 
+input[type="date"], 
+textarea {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(179, 165, 239, 0.3) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    transition: 0.3s;
+    width: 100%; /* Ensure inputs fill container */
+    box-sizing: border-box;
+}
+
+.ui-button, .icon-btn {
+    background: linear-gradient(130deg, rgba(122, 94, 255, 0.2), rgba(56, 206, 255, 0.18));
+    border: 1px solid rgba(120, 224, 255, 0.5);
+    color: #d8f8ff;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ui-button:hover {
+    background: linear-gradient(130deg, rgba(117, 78, 255, 0.85), rgba(64, 227, 255, 0.85));
+    color: #070814;
+    box-shadow: 0 0 22px rgba(92, 243, 255, 0.5);
+}
+
+.icon-btn:hover {
+    background: linear-gradient(130deg, rgba(117, 78, 255, 0.85), rgba(64, 227, 255, 0.85));
+    color: #070814;
+    box-shadow: 0 0 22px rgba(92, 243, 255, 0.5);
 }
 
 .close-btn {
-    position: static;         /* Changed from absolute to work with flexbox */
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
     font-size: 24px;
+    font-weight: bold;
+    color: #e8fdff;
+    background: rgba(131, 102, 255, 0.18);
+    border: 1px solid rgba(133, 236, 255, 0.45);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
-    padding: 5px;
     line-height: 1;
+    transition: all 0.25s ease;
 }
 
 .close-btn:hover {
-    color: #ff5f5f; 
-    transform: rotate(90deg); /* Cool subtle animation */
+    color: #070814;
+    background: linear-gradient(130deg, rgba(117, 78, 255, 0.85), rgba(64, 227, 255, 0.85));
+    box-shadow: 0 0 18px rgba(103, 231, 255, 0.5);
 }
-.settings-header h3 .material-symbols-outlined {
-    font-size: 30px;         /* Adjust this to match your text size */
-    vertical-align: middle;  /* Backup alignment */
+
+#admin-lock {
+    background: linear-gradient(145deg, rgba(116, 83, 252, 0.35), rgba(52, 214, 255, 0.2));
+    border: 1px solid rgba(141, 229, 255, 0.5);
+    border-radius: 999px;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+}
+
+.admin-section-label {
+    margin-top: 14px;
+    font-size: 0.74rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: #9be9ff;
+}
+
+.crud-group {
+    display: flex;
+    gap: 10px;
+}
+
+.crud-group button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid rgba(149, 225, 255, 0.5);
+    color: #e9f9ff;
+    background: linear-gradient(150deg, rgba(113, 87, 249, 0.35), rgba(42, 189, 255, 0.22));
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.crud-group button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 16px rgba(117, 220, 255, 0.45);
 }

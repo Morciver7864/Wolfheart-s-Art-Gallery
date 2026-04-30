@@ -61,31 +61,27 @@
     .grid-container { column-count: 3; }
 }
 
-/* Tablet view */
-@media (max-width: 800px) {
-    .grid-container { 
-        column-count: 2; 
+@media (max-width: 900px) {
+    .grid-container {
+        column-count: 2;
         padding: 20px;
     }
 }
 
-/* Phone view - THE FIX */
-@media (max-width: 600px) {
-    .grid-container { 
-        /* Change from 1 to 2 or 4 to see more images at once */
-        column-count: 2; 
+@media (max-width: 640px) {
+    .grid-container {
+        column-count: 2;
         column-gap: 10px;
-        padding: 10px; 
-    }
-    
-    .gallery-item {
-        margin-bottom: 10px;
+        padding: 12px;
     }
 
-    /* Optional: Make the text smaller so it fits the tiny boxes */
+    .gallery-item {
+        margin-bottom: 12px;
+    }
+
     .gallery-item figcaption {
-        font-size: 0.8rem;
-        padding: 10px 5px;
+        font-size: 0.86rem;
+        padding: 10px 8px;
     }
 }
 /* --- Skeleton Loading Animation --- */
@@ -136,4 +132,65 @@
 /* Also disable the image zoom if you want it to feel more like a static grid */
 .grid-container.icons-only .gallery-item:hover .gallery-img {
     transform: none;
+}
+
+/* Admin mode: force action buttons visible on touch/mobile. */
+.grid-container.show-admin-actions .admin-actions {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.gallery-pagination {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 18px 0 40px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.page-nav-btn,
+.page-btn {
+    border: 1px solid rgba(143, 220, 255, 0.4);
+    background: rgba(17, 26, 61, 0.75);
+    color: #d7f8ff;
+    border-radius: 8px;
+    min-width: 38px;
+    height: 36px;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.page-btn.active {
+    background: linear-gradient(130deg, rgba(117, 78, 255, 0.9), rgba(64, 227, 255, 0.9));
+    color: #071018;
+    border-color: rgba(96, 243, 255, 0.7);
+}
+
+.page-nav-btn:hover:not(:disabled),
+.page-btn:hover:not(.active) {
+    background: rgba(52, 74, 153, 0.85);
+}
+
+.page-nav-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.page-ellipsis {
+    color: #b9ccf7;
+    padding: 0 4px;
+    user-select: none;
 }

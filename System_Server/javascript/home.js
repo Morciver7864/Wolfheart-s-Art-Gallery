@@ -34,7 +34,7 @@ async function initHomeCarousel() {
                 // 1. We keep 'loading' class and set img opacity to 0 by default
                 itemsHTML += `
                     <div class="carousel-item loading" onclick="openZoom('${data.file}', '${displayTitle}', '${displayDesc}', '${displayDate}')">
-                        <img src="${data.file}" alt="${displayTitle}" style="opacity: 0;" onload="revealImage(this)">
+                        <img src="${data.file}" alt="${displayTitle}" style="opacity: 0;" onload="revealImage(this)" onerror="failImageLoad(this)">
                         <div class="item-info">
                             <h3>${displayTitle}</h3>
                             <p class="carousel-date">${displayDate}</p>
@@ -64,8 +64,15 @@ window.revealImage = (img) => {
     setTimeout(() => {
         const parent = img.closest('.carousel-item');
         if (parent) parent.classList.remove('loading');
+        img.classList.add('loaded');
         img.style.opacity = "1";
     }, 200);
+};
+
+window.failImageLoad = (img) => {
+    const parent = img.closest('.carousel-item');
+    if (parent) parent.classList.remove('loading');
+    img.style.opacity = "0.35";
 };
 
 function startSmartLoop(track) {
@@ -173,7 +180,21 @@ if (sideOverlay) {
 
 function setupOptions() {
     const speedRange = document.getElementById('speed-range');
-    if (speedRange) speedRange.addEventListener('input', (e) => carouselSettings.baseSpeed = parseFloat(e.target.value));
+    const frictionRange = document.getElementById('friction-range');
+
+    if (speedRange) {
+        carouselSettings.baseSpeed = parseFloat(speedRange.value) || carouselSettings.baseSpeed;
+        speedRange.addEventListener('input', (e) => {
+            carouselSettings.baseSpeed = parseFloat(e.target.value);
+        });
+    }
+
+    if (frictionRange) {
+        carouselSettings.momentumFriction = parseFloat(frictionRange.value) || carouselSettings.momentumFriction;
+        frictionRange.addEventListener('input', (e) => {
+            carouselSettings.momentumFriction = parseFloat(e.target.value);
+        });
+    }
 }
 
 function setupSearch() {
