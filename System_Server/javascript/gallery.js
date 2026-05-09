@@ -272,12 +272,14 @@ function applySearchFilter() {
         }
     };
 
-    /* --- 5. AUTHENTICATION & LOGIN --- */
 /* --- 5. AUTHENTICATION & LOGIN (UPDATED) --- */
 onAuthStateChanged(auth, (user) => {
     isAdmin = !!user;
     const btn = document.getElementById('admin-lock');
     const adminControls = document.getElementById('admin-controls');
+    
+    // Grab the new Status Settings wrapper
+    const adminCommWrapper = document.getElementById('admin-commission-wrapper');
 
     // Update the Lock Icon
     if (btn) {
@@ -289,6 +291,11 @@ onAuthStateChanged(auth, (user) => {
         // Show the admin configuration panel
         if (adminControls) adminControls.style.display = 'block';
         
+        // --- FIXED: FORCE SHOW OVERRIDING !important CSS ---
+        if (adminCommWrapper) {
+            adminCommWrapper.style.setProperty('display', 'block', 'important');
+        }
+        
         // AUTO-OPEN: Reveal the Lore form immediately upon login
         if (uploadModal) {
             uploadModal.style.display = 'flex';
@@ -299,6 +306,12 @@ onAuthStateChanged(auth, (user) => {
     } else {
         // Hide admin UI and form if logged out
         if (adminControls) adminControls.style.display = 'none';
+        
+        // --- FIXED: FORCE HIDE OVERRIDING !important CSS ---
+        if (adminCommWrapper) {
+            adminCommWrapper.style.setProperty('display', 'none', 'important');
+        }
+        
         if (uploadModal) uploadModal.style.display = 'none';
         
         clearTimeout(logoutTimer);

@@ -24,24 +24,35 @@ async function initHomeCarousel() {
         const querySnapshot = await getDocs(q);
         
         let itemsHTML = "";
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const displayTitle = (data.title || data.search || "Untitled masterpiece").replace(/'/g, "\\'");
-            const displayDesc = (data.description || "No lore recorded.").replace(/'/g, "\\'").replace(/\n/g, " ");
-            const displayDate = data.date || "Unknown Date"; 
+        /* --- home.js logic --- */
+querySnapshot.forEach((doc) => {
+    const data = doc.data();
 
-            if (data.file) {
-                // 1. We keep 'loading' class and set img opacity to 0 by default
-                itemsHTML += `
-                    <div class="carousel-item loading" onclick="openZoom('${data.file}', '${displayTitle}', '${displayDesc}', '${displayDate}')">
-                        <img src="${data.file}" alt="${displayTitle}" style="opacity: 0;" onload="revealImage(this)" onerror="failImageLoad(this)">
-                        <div class="item-info">
-                            <h3>${displayTitle}</h3>
-                            <p class="carousel-date">${displayDate}</p>
-                        </div>
-                    </div>`;
-            }
-        });
+    // 1. Scrub the title and description for display
+    // This removes backslashes and fixes "Protrait"
+    const displayTitle = (data.title || data.search || "Untitled masterpiece")
+        .replace(/\\/g, "")
+        .replace(/Protrait/gi, "Portrait");
+
+    const displayDesc = (data.description || "No lore recorded.")
+        .replace(/\\/g, "")
+        .replace(/Protrait/gi, "Portrait")
+        .replace(/\n/g, " ");
+
+    const displayDate = data.date || "Unknown Date"; 
+
+    if (data.file) {
+        // Use the cleaned variables in your template
+        itemsHTML += `
+            <div class="carousel-item loading" onclick="openZoom('${data.file}', '${displayTitle.replace(/'/g, "\\'")}', '${displayDesc.replace(/'/g, "\\'")}', '${displayDate}')">
+                <img src="${data.file}" alt="${displayTitle}" style="opacity: 0;" onload="revealImage(this)" onerror="failImageLoad(this)">
+                <div class="item-info">
+                    <h3>${displayTitle}</h3>
+                    <p class="carousel-date">${displayDate}</p>
+                </div>
+            </div>`;
+    }
+});
 
         if (itemsHTML !== "") {
             track.innerHTML = itemsHTML + itemsHTML; 

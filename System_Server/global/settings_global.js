@@ -2,8 +2,8 @@
 // 🔧 SETTINGS SYSTEM (MODAL + CONTROLS)
 // =========================================================
 
-// --- Carousel & Site State ---
-let carouselSettings = {
+// --- GLOBAL STATE ---
+const carouselSettings = {
     autoScroll: true,
     baseSpeed: 1,
     friction: 0.95,
@@ -14,6 +14,10 @@ let carouselSettings = {
 // 🚀 INITIALIZE SETTINGS UI
 // =========================================================
 function initSettings() {
+
+    // -----------------------------
+    // 📦 ELEMENTS
+    // -----------------------------
     const openBtn = document.getElementById('open-settings');
     const modal = document.getElementById('settings-modal');
     const closeBtn = document.getElementById('close-settings');
@@ -25,12 +29,21 @@ function initSettings() {
     const muteIcon = document.getElementById('mute-icon');
     const volumeSlider = document.getElementById('volume-slider');
     const bgMusic = document.getElementById('bg-music');
-    const NAV_MODE_KEY = "navbarDisplayMode";
-    const MUTE_KEY = "audioMuted";
-    const VOLUME_KEY = "audioVolume";
-    const SPEED_KEY = "carouselSpeed";
-    const FRICTION_KEY = "carouselFriction";
 
+    // -----------------------------
+    // 💾 STORAGE KEYS
+    // -----------------------------
+    const STORAGE = {
+        NAV_MODE: "navbarDisplayMode",
+        MUTE: "audioMuted",
+        VOLUME: "audioVolume",
+        SPEED: "carouselSpeed",
+        FRICTION: "carouselFriction"
+    };
+
+    // -----------------------------
+    // 🧠 HELPERS
+    // -----------------------------
     const readNumber = (value, fallback) => {
         const parsed = parseFloat(value);
         return Number.isNaN(parsed) ? fallback : parsed;
@@ -38,6 +51,7 @@ function initSettings() {
 
     const applyNavbarMode = () => {
         if (!toggleNavBtn || !navLinks) return;
+
         toggleNavBtn.innerText = navLinks.classList.contains('icons-only')
             ? "Show Full Navbar"
             : "Show Icons Only";
@@ -45,117 +59,147 @@ function initSettings() {
 
     const applyMuteUI = () => {
         if (muteIcon) {
-            muteIcon.innerText = carouselSettings.isMuted ? 'volume_off' : 'volume_up';
+            muteIcon.innerText = carouselSettings.isMuted
+                ? 'volume_off'
+                : 'volume_up';
         }
     };
 
+    // -----------------------------
+    // 🔄 LOAD SAVED SETTINGS
+    // -----------------------------
+
+    // Navbar mode
     if (navLinks) {
-        const savedMode = localStorage.getItem(NAV_MODE_KEY);
-        if (savedMode === "icons-only") {
-            navLinks.classList.add('icons-only');
-        } else if (savedMode === "full") {
-            navLinks.classList.remove('icons-only');
-        }
+        const savedMode = localStorage.getItem(STORAGE.NAV_MODE);
+        navLinks.classList.toggle('icons-only', savedMode === "icons-only");
     }
     applyNavbarMode();
 
-    const savedMuted = localStorage.getItem(MUTE_KEY);
+    // Audio
+    const savedMuted = localStorage.getItem(STORAGE.MUTE);
     if (savedMuted !== null) {
         carouselSettings.isMuted = savedMuted === "true";
     }
+
     if (bgMusic) {
-        const savedVolume = readNumber(localStorage.getItem(VOLUME_KEY), readNumber(volumeSlider?.value, 0.5));
+        const savedVolume = readNumber(
+            localStorage.getItem(STORAGE.VOLUME),
+            readNumber(volumeSlider?.value, 0.5)
+        );
+
         bgMusic.volume = Math.max(0, Math.min(1, savedVolume));
         bgMusic.muted = carouselSettings.isMuted;
+
         if (volumeSlider) volumeSlider.value = String(bgMusic.volume);
     }
+
     applyMuteUI();
 
+    // Speed
     if (speedInput) {
-        const savedSpeed = readNumber(localStorage.getItem(SPEED_KEY), readNumber(speedInput.value, carouselSettings.baseSpeed));
+        const savedSpeed = readNumber(
+            localStorage.getItem(STORAGE.SPEED),
+            readNumber(speedInput.value, carouselSettings.baseSpeed)
+        );
+
         speedInput.value = String(savedSpeed);
         carouselSettings.baseSpeed = savedSpeed;
     }
 
+    // Friction
     if (frictionInput) {
-        const savedFriction = readNumber(localStorage.getItem(FRICTION_KEY), readNumber(frictionInput.value, carouselSettings.friction));
+        const savedFriction = readNumber(
+            localStorage.getItem(STORAGE.FRICTION),
+            readNumber(frictionInput.value, carouselSettings.friction)
+        );
+
         frictionInput.value = String(savedFriction);
         carouselSettings.friction = savedFriction;
     }
 
-    // -----------------------------
-    // 🧩 OPEN SETTINGS MODAL
-    // -----------------------------
+    // =====================================================
+    // 🎛️ EVENT LISTENERS
+    // =====================================================
+
+    // 🧩 OPEN MODAL
     openBtn?.addEventListener('click', (e) => {
         e.preventDefault();
 
-        // Close sidebar if open
-        if (navLinks?.classList.contains('active')) {
-            navLinks.classList.remove('active');
-        }
+        // Close mobile sidebar if open
+        navLinks?.classList.remove('active');
 
         if (modal) modal.style.display = 'flex';
     });
 
-    // -----------------------------
     // ❌ CLOSE MODAL
-    // -----------------------------
     closeBtn?.addEventListener('click', () => {
         if (modal) modal.style.display = 'none';
     });
 
-    // -----------------------------
-    // 🎚️ SLIDER CONTROLS
-    // -----------------------------
+    // 🖱️ CLICK OUTSIDE
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // 🎚️ SPEED
     speedInput?.addEventListener('input', (e) => {
-        carouselSettings.baseSpeed = parseFloat(e.target.value);
-        localStorage.setItem(SPEED_KEY, String(carouselSettings.baseSpeed));
+        const value = readNumber(e.target.value, 1);
+        carouselSettings.baseSpeed = value;
+        localStorage.setItem(STORAGE.SPEED, value);
     });
 
+    // 🎚️ FRICTION
     frictionInput?.addEventListener('input', (e) => {
-        carouselSettings.friction = parseFloat(e.target.value);
-        localStorage.setItem(FRICTION_KEY, String(carouselSettings.friction));
+        const value = readNumber(e.target.value, 0.95);
+        carouselSettings.friction = value;
+        localStorage.setItem(STORAGE.FRICTION, value);
     });
 
-    // -----------------------------
-    // 🔊 MUTE BUTTON
-    // -----------------------------
+    // 🔊 MUTE
     muteBtn?.addEventListener('click', () => {
         carouselSettings.isMuted = !carouselSettings.isMuted;
+
         if (bgMusic) bgMusic.muted = carouselSettings.isMuted;
-        localStorage.setItem(MUTE_KEY, String(carouselSettings.isMuted));
+
+        localStorage.setItem(STORAGE.MUTE, carouselSettings.isMuted);
         applyMuteUI();
     });
 
+    // 🔉 VOLUME
     volumeSlider?.addEventListener('input', (e) => {
         const volume = Math.max(0, Math.min(1, readNumber(e.target.value, 0.5)));
-        if (bgMusic) bgMusic.volume = volume;
-        localStorage.setItem(VOLUME_KEY, String(volume));
 
+        if (bgMusic) bgMusic.volume = volume;
+        localStorage.setItem(STORAGE.VOLUME, volume);
+
+        // Auto-unmute if volume increased
         if (volume > 0 && carouselSettings.isMuted) {
             carouselSettings.isMuted = false;
+
             if (bgMusic) bgMusic.muted = false;
-            localStorage.setItem(MUTE_KEY, "false");
+
+            localStorage.setItem(STORAGE.MUTE, false);
             applyMuteUI();
         }
     });
 
-    // -----------------------------
-    // 🖱️ CLICK OUTSIDE MODAL
-    // -----------------------------
-    window.addEventListener('click', (e) => {
-        if (e.target === modal && modal) modal.style.display = 'none';
-    });
-
-    // -----------------------------
     // 🔁 NAV STYLE TOGGLE
-    // -----------------------------
     toggleNavBtn?.addEventListener('click', () => {
         navLinks.classList.toggle('icons-only');
-        localStorage.setItem(NAV_MODE_KEY, navLinks.classList.contains('icons-only') ? "icons-only" : "full");
+
+        localStorage.setItem(
+            STORAGE.NAV_MODE,
+            navLinks.classList.contains('icons-only')
+                ? "icons-only"
+                : "full"
+        );
+
         applyNavbarMode();
     });
 }
 
-// Initialize
-initSettings();
+// =========================================================
+// ▶️ INIT
+// =========================================================
+document.addEventListener('DOMContentLoaded', initSettings);

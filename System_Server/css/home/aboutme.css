@@ -41,19 +41,65 @@
         inset 0 0 20px rgba(179, 165, 239, 0.2);
     transform: translateY(-5px);
 }
-/* This applies the yellow glow when the link has the .active class */
-.navbar a.active {
+
+/* --- Navbar & Sidebar Navigation Improvements --- */
+.nav-menu a, 
+.navigation-bar a,
+.nav-links a {
+    border-bottom: 2px solid transparent; /* Prevents "jumping" layout when border is added */
+    transition: color 0.3s ease, text-shadow 0.3s ease, border-bottom 0.3s ease;
+}
+
+.nav-menu a.active, 
+.navigation-bar a.active,
+.nav-links a.active {
     color: #ffcc00 !important; 
     font-weight: 700;
     text-shadow: 0 0 10px rgba(255, 204, 0, 0.8), 
                  0 0 20px rgba(255, 204, 0, 0.4);
     border-bottom: 2px solid #ffcc00;
 }
+
 body {
-    padding-top: 100px; /* Adjust this number based on your navbar's height */
+    /* Standardized padding for the fixed navbar */
+    padding-top: 80px; 
 }
 
-/* OR, specifically adjust the first glass pane if you want more control */
+/* Reduced margin to prevent double-spacing with the body padding */
 .glass-background-pane:first-of-type {
-    margin-top: 100px !important; 
+    margin-top: 30px !important; 
+}
+
+/* --- Mobile Sidebar Fix: Prevents "pushing" main content --- */
+@media (max-width: 768px) {
+    #nav-links {
+        /* Forces sidebar out of the document flow so it doesn't push glass panes */
+        position: fixed;
+        top: 0;
+        right: -100%; /* Start hidden off-screen to the right */
+        width: 280px;
+        height: 100vh;
+        
+        /* Visuals to match your glass theme */
+        background: rgba(18, 20, 32, 0.95);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-left: 1px solid rgba(179, 165, 239, 0.3);
+        
+        z-index: 10001; /* High enough to be above glass panes and forest layers */
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 100px 30px;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    #nav-links.active {
+        right: 0; /* Smoothly slides in over the content */
+    }
+    
+    #nav-links a {
+        margin: 15px 0;
+        font-size: 1.2rem;
+    }
 }

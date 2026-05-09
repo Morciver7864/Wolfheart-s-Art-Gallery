@@ -48,4 +48,17 @@ document.addEventListener("DOMContentLoaded", () => {
         setActiveLink(aboutLink);
         showAboutSection(false);
     }
+    
+    const yearSpan = document.getElementById("current-year");
+    if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+    }
 });
+
+// 2. Smooth Scroll Back to Top Action
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}

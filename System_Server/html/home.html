@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="300">
-    <title>Morciver's Home</title>
+   
+    <title>Morciver's Gallery</title>
     
     <link rel="icon" type="image/png" href="../image/howling_wolf_logo.png">
+    <link rel="stylesheet" href="../css/gallery/gallery.css">
     <link rel="stylesheet" href="../css/home/home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&family=Lexend:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/home/aboutme.css">
+    <link rel="stylesheet" href="../global/footer.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&family=Lexend:wght@300;400&display=swap" rel="stylesheet">
+
     <audio id="bg-music" loop>
-        <source src="../music/Dream a little dream - Far Beyond the World.mp3" type="audio/mpeg">
+        <source src="../music/Kundiman 1800 (Love Song circa 1800).mp3" type="audio/mpeg">
     </audio>
 </head>
+
+<!-- Zoom the images in the carausel -->
 <div id="zoom-overlay" class="zoom-overlay">
     <div class="zoom-content">
         <button class="close-btn" onclick="closeZoom()">&times;</button>
@@ -92,6 +98,7 @@
     </ul>
 </nav>
 
+<!-- Settings Panel -->
 <div id="settings-modal" class="settings-modal">
     <div class="settings-content">
         <div class="settings-header">
@@ -145,42 +152,150 @@
     </div>
 </div>
 
-    <div class="glass-background-pane"  style="margin-top: 140px;">
-    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 100px;">
-            <div style="display: flex; align-items: center; gap: 20px; justify-content: center; flex-wrap: wrap;">
-<div class="logo-wrapper" onclick="triggerEasterEgg(this)">
-    <canvas id="sparkle-canvas"></canvas>
-    <svg class="moon-svg" viewBox="0 0 300 200">
-        <circle id="moon-glow" r="12" fill="#fff" />
-    </svg>
-    <img src="../image/howling_wolf_logo.png" alt="Morciver Logo" class="main-logo">
-</div>
-                <h1 style="font-family: Tangerine; font-size: clamp(40px, 8vw, 85px); padding: 0;">Welcome to <br>my home website</h1>
-            </div>
-            <p style="font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.2rem; margin-top: 10px;">"Don't be afraid to show <br> it fascinates me for being you." - Morciver.</p>
-            
-            <div id="search-title-artwork" style="margin: 30px auto; width: 80%; max-width: 450px; display: flex; align-items: center; background: rgba(50, 75, 122, 0.85); border-radius: 50px; padding: 12px 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+
+<!-- Sections -->
+<main style="width: 100%; margin-top: 100px;">
+
+    <!-- SECTION 1: HOME -->
+    <section id="home-section" style="min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scroll-margin-top: 100px;">
+        
+        <div class="glass-background-pane">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <img src="../image/howling_wolf_logo.png" alt="Morciver Logo" style="width: 200px; height: auto; border-radius: 50%;">
+                    <h1 style="font-family: Tangerine; font-size: clamp(40px, 8vw, 85px); padding: 0;">Welcome to <br> Mi Casa de LumaNexus</h1>
+                </div>
+                
+                <p style="font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.2rem; margin-top: 10px;">
+                    "You always know that I'll be here <br> creating something magical." - Morciver.
+                </p>
+                
+                <!-- Search Bar -->
+                <div id="search-title-artwork" style="margin: 30px auto; width: 80%; max-width: 450px; display: flex; align-items: center; background: rgba(50, 75, 122, 0.85); border-radius: 50px; padding: 12px 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
                 <span class="material-symbols-outlined" style="color: rgba(179, 165, 239, 0.9); margin-right: 12px; cursor: default; user-select: none;">search</span>
                 <input type="text" id="artSearch" placeholder="Search my gallery :3" style="width: 100%; background: transparent; border: none; color: white; outline: none; font-size: 1rem;">
             </div>
+            </div>
         </div>
-    </div>
 
-<main style="width: 100%; margin-top: 30px;">
-    <section class="carousel-container">
-        <div class="carousel-track" id="dynamic-carousel-track">
-            <p class="loading-text">Connecting to LumaNexus</p>
+        <!-- Carousel Container (Home Specific) -->
+        <div class="carousel-container" style="padding: 20px; width: 100%;">
+            <div class="carousel-track" id="dynamic-carousel-track">
+                <p class="loading-text">Connecting to LumaNexus</p>
+            </div>
         </div>
     </section>
-    <section id="about-section" class="glass-background-pane" style="margin-top: 140px; min-height: 80vh; display: none;">
-    <div style="padding: 40px; text-align: center;">
-        <h2 style="font-family: Tangerine; font-size: 4rem;">About Morciver</h2>
-        <p style="font-family: 'Lexend', sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6;">
-            [Your lore or bio goes here! This panel will appear and the page will slide down to show it.]
-        </p>
+
+    <!-- SECTION 2: ABOUT ME -->
+    <!-- Applying identical flex and height properties here -->
+    <section id="about-section" style="min-height: 90vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; scroll-margin-top: 100px;">
+        
+        <div class="glass-background-pane">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <div class="animatic-avatar-container">
+    <div class="sketch-border"></div>
+    <img src="../image/morciver_1x1.jpg" alt="Morciver Logo" class="wolf-avatar">
+</div>
+                    <h1 style="font-family: Tangerine; font-size: clamp(40px, 8vw, 85px); padding: 0;">About me</h1>
+                </div>
+                
+                <p style="font-family: 'Times New Roman', Times, serif; font-style: italic; font-size: 1.2rem; margin: 20px; text-align: center;">
+                    "I am living this world for nineteen years and yet it still hasn't done to fulfill <br> my purpose in this chaotic reality." - Morciver.
+                </p>
+            </div>
+            <div class="social-links-container">
+    <h4>CONNECT WITH ME</h4>
+    <div class="social-grid">
+        <a href="YOUR_FACEBOOK_URL" target="_blank" class="social-icon-card fb-card" title="Facebook">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" alt="Facebook" class="social-img">
+            <span class="social-name">Facebook</span>
+        </a>
+
+        <a href="YOUR_DISCORD_URL" target="_blank" class="social-icon-card discord-card" title="Discord">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg" alt="Discord" class="social-img">
+            <span class="social-name">Discord</span>
+        </a>
+
+        <a href="YOUR_TWITTER_URL" target="_blank" class="social-icon-card twitter-card" title="Twitter">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/twitter.svg" alt="Twitter" class="social-img">
+            <span class="social-name">Twitter</span>
+        </a>
+
+        <a href="YOUR_DEVIANTART_URL" target="_blank" class="social-icon-card deviantart-card" title="DeviantArt">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/deviantart.svg" alt="DeviantArt" class="social-img">
+            <span class="social-name">DeviantArt</span>
+        </a>
+
+        <a href="YOUR_FURAFFINITY_URL" target="_blank" class="social-icon-card furaffinity-card" title="Furaffinity">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/furaffinity.svg" alt="Furaffinity" class="social-img">
+            <span class="social-name">Furaffinity</span>
+        </a>
+
+        <a href="YOUR_GITHUB_URL" target="_blank" class="social-icon-card github-card" title="GitHub">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub" class="social-img">
+            <span class="social-name">GitHub</span>
+        </a>
+
+        <a href="YOUR_PINTEREST_URL" target="_blank" class="social-icon-card pinterest-card" title="Pinterest">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/pinterest.svg" alt="Pinterest" class="social-img">
+            <span class="social-name">Pinterest</span>
+        </a>
+
+        <a href="YOUR_TELEGRAM_URL" target="_blank" class="social-icon-card telegram-card" title="Telegram">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/telegram.svg" alt="Telegram" class="social-img">
+            <span class="social-name">Telegram</span>
+        </a>
+
+        <a href="YOUR_TIKTOK_URL" target="_blank" class="social-icon-card tiktok-card" title="TikTok">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg" alt="TikTok" class="social-img">
+            <span class="social-name">TikTok</span>
+        </a>
     </div>
-</section>
+</div>
+        </div> 
+    </section>
 </main>
+
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            
+            <div class="footer-brand-section">
+                <h3 class="footer-logo">MORCIVER</h3>
+                <p class="footer-tagline">Building creative realms in this chaotic reality.</p>
+                <div class="footer-status">
+                    <span class="status-dot green"></span>
+                    <span class="status-text">Commissions: Open</span>
+                </div>
+            </div>
+
+            <div class="footer-links-section">
+    <h4>DIRECTORY</h4>
+    <div class="footer-links-grid">
+        <div><a href="home.html">Home</a></div>
+        <div><a href="home.html#about">About</a></div> <div><a href="gallery.html">Gallery</a></div>
+        <div><a href="commission.html">Commissions</a></div>
+    </div>
+</div>
+
+            <div class="footer-legal-section">
+                <h4>LEGAL & TECH</h4>
+                <div class="footer-legal-links">
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-of-service">Terms of Service</a>
+                </div>
+                <button id="back-to-top-btn" class="back-to-top-btn" title="Back to Top">
+                    Back to Top ↑
+                </button>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year"></span> Morciver. All rights reserved. Handcrafted with passion.</p>
+        </div>
+    </footer>
 
     <script type="module" src="../javascript/home.js"></script>
     <script type="module" src="../configurations/music.js"></script>
@@ -189,5 +304,26 @@
     <script type="module" src="../javascript/aboutme.js"></script>
     <script type="module" src="../global/logo_animation.js"></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Automatically grab and insert the current year (2026)
+            const yearSpan = document.getElementById("current-year");
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Secure event listener for the Back to Top button
+            const topBtn = document.getElementById("back-to-top-btn");
+            if (topBtn) {
+                topBtn.addEventListener("click", () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                });
+            }
+        });
+    </script>
+    
 </body>
 </html>

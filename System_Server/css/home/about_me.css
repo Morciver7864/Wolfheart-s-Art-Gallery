@@ -1,0 +1,242 @@
+/* Container styling */
+.social-links-container {
+    margin: 35px auto 0 auto; /* Added 'auto' left/right to center the whole container */
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the "Connect with me" header */
+}
+
+.social-links-container h4 {
+    color: #00f2ff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+    padding-bottom: 8px;
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+}
+
+/* 3x2 responsive grid */
+.social-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centers the cards horizontally */
+    align-items: center;
+    gap: 15px; /* Spaces them out evenly */
+    width: 100%;
+    padding: 10px 0;
+}
+
+/* Base style for the interactive card (sinking state) */
+.social-icon-card {
+    background: rgba(20, 20, 40, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transform: translateY(0);
+    
+    /* Perfect square-ish proportions */
+    width: 120px;
+    height: 100px;
+    box-sizing: border-box;
+    
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), 
+                border-color 0.8s ease, 
+                box-shadow 0.8s ease;
+}
+
+/* Image sizing and styling */
+.social-img {
+    width: 32px;
+    height: 32px;
+    /* Turns the fetched black CDN SVGs into clean white by default */
+    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
+    transition: filter 0.6s ease;
+}
+
+/* Labels below images */
+.social-name {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Lexend', sans-serif;
+    transition: color 0.6s ease;
+}
+
+/* Hover state (floating state) */
+.social-icon-card:hover {
+    transform: translateY(-6px);
+    
+    /* Responsive snappy transition on hover */
+    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), 
+                border-color 0.25s ease, 
+                box-shadow 0.25s ease;
+}
+
+.social-icon-card:hover .social-name {
+    color: #ffffff;
+}
+
+/* --- Brand Specific Cyberpunk Colors, Glows, & Brand Filters --- */
+
+/* Facebook (Glows Blue) */
+.fb-card:hover {
+    border-color: #1877f2;
+    box-shadow: 0 0 15px rgba(24, 119, 242, 0.4);
+}
+.fb-card:hover .social-img {
+    /* Filters to turn image color to Blue (#1877f2) on hover */
+    filter: invert(37%) sepia(93%) saturate(1411%) hue-rotate(202deg) brightness(97%) contrast(96%);
+}
+
+/* Discord (Glows Blurple) */
+.discord-card:hover {
+    border-color: #5865F2;
+    box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+}
+.discord-card:hover .social-img {
+    /* Filters to turn image color to Discord Blurple (#5865F2) */
+    filter: invert(38%) sepia(87%) saturate(1637%) hue-rotate(218deg) brightness(96%) contrast(97%);
+}
+
+/* Twitter Bird (Glows Light Blue) */
+.twitter-card:hover {
+    border-color: #1DA1F2;
+    box-shadow: 0 0 15px rgba(29, 161, 242, 0.4);
+}
+.twitter-card:hover .social-img {
+    /* Filters to turn image color to Twitter Blue (#1DA1F2) */
+    filter: invert(56%) sepia(79%) saturate(1750%) hue-rotate(180deg) brightness(96%) contrast(99%);
+}
+
+/* DeviantArt (Glows Bright Green) */
+.deviantart-card:hover {
+    border-color: #05cc47;
+    box-shadow: 0 0 15px rgba(5, 204, 71, 0.4);
+}
+.deviantart-card:hover .social-img {
+    /* Filters to turn image color to DeviantArt Green (#05cc47) */
+    filter: invert(57%) sepia(74%) saturate(2976%) hue-rotate(107deg) brightness(101%) contrast(98%);
+}
+
+/* Furaffinity (Glows Orange) */
+.furaffinity-card:hover {
+    border-color: #ff851b;
+    box-shadow: 0 0 15px rgba(255, 133, 27, 0.4);
+}
+.furaffinity-card:hover .social-img {
+    /* Filters to turn image color to Orange (#ff851b) */
+    filter: invert(61%) sepia(85%) saturate(1832%) hue-rotate(352deg) brightness(101%) contrast(100%);
+}
+
+/* GitHub (Glows Bright White) */
+.github-card:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+.github-card:hover .social-img {
+    /* Kept pure white */
+    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+/* Pinterest (Glows Red) */
+.pinterest-card:hover {
+    border-color: #bd081c;
+    box-shadow: 0 0 15px rgba(189, 8, 28, 0.4);
+}
+.pinterest-card:hover .social-img {
+    /* Filters to change icon to Pinterest Red (#bd081c) */
+    filter: invert(12%) sepia(95%) saturate(5433%) hue-rotate(348deg) brightness(87%) contrast(106%);
+}
+
+/* Telegram (Glows Sky Blue) */
+.telegram-card:hover {
+    border-color: #24A1DE;
+    box-shadow: 0 0 15px rgba(36, 161, 222, 0.4);
+}
+.telegram-card:hover .social-img {
+    /* Filters to change icon to Telegram Blue (#24A1DE) */
+    filter: invert(56%) sepia(74%) saturate(1912%) hue-rotate(174deg) brightness(96%) contrast(85%);
+}
+
+/* TikTok (Cyberpunk Red & Cyan Glow) */
+.tiktok-card:hover {
+    /* Gives a beautiful dual-colored shadow effect */
+    border-color: #00f2ff;
+    box-shadow: -4px 0 15px rgba(255, 0, 80, 0.5), 4px 0 15px rgba(0, 242, 255, 0.5);
+}
+.tiktok-card:hover .social-img {
+    /* Filters to turn icon pure white to stand out over the shadow colors */
+    filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+/* Container must be set to relative positioning for the layers to work */
+.animatic-avatar-container {
+    position: relative;
+    width: 200px;  /* Size of your image */
+    height: 200px;
+    display: inline-block;
+    border-radius: 50%;
+    
+    /* NEW: Add initial space around the container so the gradient isn't cut off */
+    margin: 20px; 
+    padding: 10px
+}
+
+/* Layer 1: The Gradient Border (using a pseudo-element) */
+.animatic-avatar-container::before {
+    content: '';
+    position: absolute;
+    /* NEW: We size this slightly larger than the container to create the 5px border look */
+    top: -5px; 
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    
+    /* YOUR GRADIENT! Lavender purple fading to Cyber Cyan */
+    background: linear-gradient(135deg, #72158a 0%, #00f2ff 100%);
+    
+    /* Keeps the gradient ring perfectly circular */
+    border-radius: 50%;
+    
+    /* Positions this layer behind the image and the mask */
+    z-index: -1; 
+}
+
+/* Layer 2: The Inner Mask (Cleans up the inside edge) */
+.sketch-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #0b0f2a; /* YOUR SITE BACKGROUND COLOR (or rgba(11,15,42,1)) */
+    border-radius: 50%;
+    z-index: 0; /* Sits over the gradient but under the image */
+    pointer-events: none;
+}
+
+/* Layer 3: The Wolf Avatar Image */
+.wolf-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    position: relative; /* Essential to stay on top */
+    
+    /* We pull the image slightly inward by 2px (less than the border size)
+       so it sits perfectly aligned over the clean inside edge of the ring */
+    transform: scale(0.98); 
+    z-index: 1; /* Sits on top */
+}

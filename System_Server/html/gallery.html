@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/gallery/gallery.css">
     <link rel="stylesheet" href="../css/home/home.css">
     <link rel="stylesheet" href="../css/home/aboutme.css">
+    <link rel="stylesheet" href="../global/footer.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&family=Lexend:wght@300;400&display=swap" rel="stylesheet">
 
@@ -202,12 +203,70 @@
         </div>
     </div>
 </div>
+<footer class="site-footer">
+        <div class="footer-container">
+            
+            <div class="footer-brand-section">
+                <h3 class="footer-logo">MORCIVER</h3>
+                <p class="footer-tagline">Building creative realms in this chaotic reality.</p>
+                <div class="footer-status">
+                    <span class="status-dot green"></span>
+                    <span class="status-text">Commissions: Open</span>
+                </div>
+            </div>
+
+            <div class="footer-links-section">
+    <h4>DIRECTORY</h4>
+    <div class="footer-links-grid">
+        <div><a href="home.html">Home</a></div>
+        <div><a href="home.html#about">About</a></div> <div><a href="gallery.html">Gallery</a></div>
+        <div><a href="commission.html">Commissions</a></div>
+    </div>
+</div>
+
+            <div class="footer-legal-section">
+                <h4>LEGAL & TECH</h4>
+                <div class="footer-legal-links">
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms-of-service">Terms of Service</a>
+                </div>
+                <button id="back-to-top-btn" class="back-to-top-btn" title="Back to Top">
+                    Back to Top ↑
+                </button>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; <span id="current-year"></span> Morciver. All rights reserved. Handcrafted with passion.</p>
+        </div>
+    </footer>
 
     <script type="module" src="../javascript/gallery.js"></script>
     <script type="module" src="../configurations/music.js"></script>
     <script type="module" src="../javascript/navbar_sidebar.js"></script>
     <script type="module" src="../global/settings_global.js"></script>
     <script type="module" src="../global/logo_animation.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Automatically grab and insert the current year (2026)
+            const yearSpan = document.getElementById("current-year");
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Secure event listener for the Back to Top button
+            const topBtn = document.getElementById("back-to-top-btn");
+            if (topBtn) {
+                topBtn.addEventListener("click", () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                });
+            }
+        });
+    </script>
     
 </body>
 </html>

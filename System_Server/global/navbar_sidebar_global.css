@@ -47,10 +47,31 @@ body {
     gap: 10px;
 }
 
+/* 1. This is the "idle / mouse-out" state. 
+      We put a slower transition here so it sinks back down slowly when your mouse leaves! */
+.navbar a {
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transform: translateY(0);
+    /* Sinks back down slowly (0.9s) with a soft deceleration */
+    transition: transform 3s cubic-bezier(0.25, 1, 0.5, 1), 
+                color 0.6s ease, 
+                text-shadow 0.6s ease;
+}
+
+/* 2. This is the "hover / mouse-in" state. 
+      We make the transition faster here so it feels responsive when you hover! */
 .navbar a:hover {
     color: #b3a5ef;
     text-shadow: 0 0 8px rgba(179, 165, 239, 0.8);
-    transform: translateY(-3px); 
+    transform: translateY(-5px); /* Floats up */
+    /* Floats up faster (0.3s) for crisp feedback */
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                color 0.3s ease, 
+                text-shadow 0.3s ease;
 }
 
 /* Active nav link highlight */
@@ -75,6 +96,54 @@ body {
 
 .navbar ul.icons-only .nav-icon {
     margin: 0;
+}
+
+* Reset everything */
+#nav-links a,
+#nav-links a:active,
+#nav-links a.active,
+#nav-links a.nav-active {
+    color: #b3a5ef !important;
+    text-shadow: none !important;
+    border-bottom: 2px solid transparent !important;
+    box-shadow: none !important;
+}
+
+/* Icons reset */
+#nav-links a .nav-icon {
+    color: #b3a5ef !important;
+    filter: none !important;
+}
+
+/* JS-controlled active */
+.nav-active {
+    color: #ffcc00 !important;
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.8),
+                 0 0 20px rgba(255, 204, 0, 0.4);
+    border-bottom: 2px solid #ffcc00;
+}
+
+/* Forced glow (manual override) */
+#nav-links a.force-glow {
+    color: #ffcc00 !important;
+    text-shadow: 0 0 15px rgba(255, 204, 0, 0.9) !important;
+    border-bottom: 2px solid #ffcc00 !important;
+}
+
+#nav-links a.force-glow .nav-icon {
+    color: #ffcc00 !important;
+    filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.9)) !important;
+}
+
+/* Icon-only mode */
+.navbar ul.icons-only .nav-text {
+    display: none;
+}
+
+.navbar ul.icons-only a {
+    min-width: 44px;
+    justify-content: center;
+    padding: 10px 12px;
 }
 
 /* =========================================================

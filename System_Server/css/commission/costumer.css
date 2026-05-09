@@ -1,0 +1,116 @@
+/* Container for the form to match the progress box */
+.comm-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Glass-style inputs */
+.magical-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 15px;
+    color: #fff;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.magical-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Neon focus effect */
+.magical-input:focus {
+    border: 1px solid #00f2ff;
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+}
+
+/* Layout for Email and Payment on one line */
+.input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.input-row .magical-input {
+    flex: 1;
+}
+
+/* Character Description Box */
+textarea.magical-input {
+    resize: none;
+}
+
+/* The Send Button */
+.magical-btn {
+    background: transparent;
+    border: 2px solid #00f2ff;
+    color: #00f2ff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.magical-btn:hover {
+    background: #00f2ff;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+/* This targets the dropdown list itself */
+select.magical-input option {
+    background-color: #1a0b2e; /* A dark purple that matches your background */
+    color: #ffffff;
+    padding: 10px;
+}
+
+/* Optional: Removes the default arrow if you want a cleaner look, 
+   though keeping it is usually safer for usability */
+select.magical-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%2300f2ff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.active-customer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0; /* Tight spacing to match image_9a387b.png */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+.done-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.8); /* Matches the white-ish border in image_9a387b.png */
+    color: #fff;
+    font-family: inherit;
+    font-size: 20px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+/* Glowing effect when you hover over the button */
+.done-btn:hover {
+    border-color: #00f2ff;
+    color: #00f2ff;
+    box-shadow: 0 0 8px rgba(0, 242, 255, 0.4);
+    background: rgba(0, 242, 255, 0.05);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-5px); }
+    to { opacity: 1; transform: translateX(0); }
+}
