@@ -292,3 +292,166 @@
 #admin-commission-wrapper {
     display: none !important;
 }
+
+/* --- COMPREHENSIVE RESPONSIVE FIXES --- */
+
+@media (max-width: 600px) {
+    /* 1. Fix the Commission Status text size so it doesn't overflow */
+    h1, .commission-status-title {
+        font-size: 1.8rem !important;
+        text-align: center;
+    }
+
+    /* 2. Stack the Form Inputs (Name, Email, Payment) vertically */
+    .commission-form-row, 
+    .input-group-wrapper {
+        display: flex;
+        flex-direction: column !important;
+        gap: 15px;
+        width: 100%;
+    }
+
+    /* 3. Make inputs full width so they are easy to type in */
+    input[type="text"], 
+    input[type="email"], 
+    select, 
+    textarea {
+        width: 100% !important;
+        font-size: 16px !important; /* Prevents iOS from auto-zooming */
+    }
+
+    /* 4. Fix the Progress Bar and Text */
+    .progress-container {
+        padding: 0 10px;
+    }
+    
+    .status-meta-info {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.8rem;
+    }
+
+    /* 5. Adjust the Admin Controls we just built */
+    .custom-number-input {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .admin-input-group {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+/* --- EMERGENCY MOBILE POLISH --- */
+
+@media (max-width: 600px) {
+    /* 1. Add side padding to the whole container so text doesn't touch the edges */
+    main, .commission-section, #admin-commission-controls {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 2. Fix the "About Me" and Quote text alignment */
+    .about-me-text, blockquote, .commission-quote {
+        font-size: 0.95rem !important;
+        line-height: 1.6 !important;
+        text-align: center !important;
+        margin: 0 auto 20px auto !important;
+    }
+
+    /* 3. FORCE the inputs to stack (This fixes the cut-off Payment button) */
+    .input-group-wrapper, 
+    .form-row {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    /* 4. Fix the Commission Status text overlap */
+    .status-meta-info {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr; /* Two neat rows on mobile */
+        gap: 10px;
+        font-size: 0.8rem !important;
+        text-align: center;
+    }
+
+    /* 5. Make the "Send Request" button full width for easy tapping */
+    .ui-button-commission, .submit-btn {
+        width: 100% !important;
+        padding: 15px !important;
+    }
+}
+@media (max-width: 600px) {
+    /* Target the specific row containing Email and Payment */
+    .commission-form-row, 
+    div[style*="display: flex"] { 
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    /* Ensure every input takes full width of the padded container */
+    .commission-form-row input, 
+    .commission-form-row select,
+    .commission-form-row .input-group {
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+}
+/* Base Grid Layout */
+.status-dates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}
+
+.status-date-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers text within its column */
+}
+
+.status-date-item.start { align-items: flex-start; } /* Left align first item */
+.status-date-item.deadline { align-items: flex-end; } /* Right align last item */
+
+.status-date-item .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.status-date-item .value {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #00f2ff; /* Cyan glow for the data */
+    white-space: nowrap;
+}
+
+/* --- Mobile Fix --- */
+@media (max-width: 600px) {
+    .status-dates-grid {
+        grid-template-columns: 1fr; /* Stack them vertically on small phones */
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .status-date-item {
+        align-items: center !important; /* Center everything on mobile */
+    }
+}
+.commission-status-card p, 
+.commission-quote {
+    padding: 0 25px; /* Adds breathing room on left/right */
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: center;
+}

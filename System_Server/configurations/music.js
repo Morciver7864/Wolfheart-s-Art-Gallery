@@ -1,18 +1,22 @@
 function initMusic() {
     const music = document.getElementById('bg-music');
+    const overlay = document.getElementById('overlay');
     
-    // Function to start music and remove the listeners
-    const startMusic = () => {
+    const startGallery = () => {
+        // Start the music
         music.play().catch(error => console.log("Playback prevented:", error));
-        // Remove listeners so we don't keep trying to play it
-        document.removeEventListener('click', startMusic);
-        document.removeEventListener('keydown', startMusic);
+        
+        // Hide the overlay
+        overlay.style.display = 'none';
+        
+        // Clean up listeners
+        document.removeEventListener('click', startGallery);
+        document.removeEventListener('keydown', startGallery);
     };
 
-    // Listen for the first click or key press
-    document.addEventListener('click', startMusic);
-    document.addEventListener('keydown', startMusic);
+    // Listen for that first mandatory interaction
+    document.addEventListener('click', startGallery);
+    document.addEventListener('keydown', startGallery);
 }
 
-// Call it when the page loads
 initMusic();

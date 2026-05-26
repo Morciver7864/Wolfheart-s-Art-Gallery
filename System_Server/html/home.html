@@ -14,10 +14,15 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&family=Lexend:wght@300;400&display=swap" rel="stylesheet">
 
-    <audio id="bg-music" loop>
-        <source src="../music/Kundiman 1800 (Love Song circa 1800).mp3" type="audio/mpeg">
-    </audio>
+    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; justify-content:center; align-items:center; color:white; cursor:pointer;">
+    <div style="text-align:center;">
+        <h1>Welcome to the Gallery</h1>
+        <p>Click anywhere to enter</p>
+    </div>
+</div>
 </head>
+
+
 
 <!-- Zoom the images in the carausel -->
 <div id="zoom-overlay" class="zoom-overlay">
@@ -217,7 +222,7 @@
             <span class="social-name">Discord</span>
         </a>
 
-        <a href="YOUR_TWITTER_URL" target="_blank" class="social-icon-card twitter-card" title="Twitter">
+        <a href="https://x.com/morciver7864" target="_blank" class="social-icon-card twitter-card" title="Twitter">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/twitter.svg" alt="Twitter" class="social-img">
             <span class="social-name">Twitter</span>
         </a>
@@ -227,7 +232,7 @@
             <span class="social-name">DeviantArt</span>
         </a>
 
-        <a href="YOUR_FURAFFINITY_URL" target="_blank" class="social-icon-card furaffinity-card" title="Furaffinity">
+        <a href="https://www.furaffinity.net/user/morciver" target="_blank" class="social-icon-card furaffinity-card" title="Furaffinity">
             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/furaffinity.svg" alt="Furaffinity" class="social-img">
             <span class="social-name">Furaffinity</span>
         </a>
@@ -254,6 +259,24 @@
     </div>
 </div>
         </div> 
+    </section>
+    <section>
+        <div class="music-player">
+    <audio id="bg-music">
+        <source src="../music/Kundiman 1800 (Love Song circa 1800).mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="controls">
+        <button onclick="prevTrack()">⏮️ Previous</button>
+        <button id="play-pause" onclick="togglePlay()">▶️ Play</button>
+        <button onclick="nextTrack()">⏭️ Next</button>
+        <button onclick="replayTrack()">🔁 Replay</button>
+    </div>
+    
+    <div id="track-info">
+        <p>Now Playing: <span id="current-song-name">Kundiman 1800</span></p>
+    </div>
+</div>
     </section>
 </main>
 
