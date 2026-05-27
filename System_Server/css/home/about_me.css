@@ -180,6 +180,16 @@
     filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
+/* Patreon (Glows Dark Coral) */
+.patreon-card:hover {
+    border-color: #FF424D;
+    box-shadow: 0 0 15px rgba(255, 66, 77, 0.4);
+}
+.patreon-card:hover .social-img {
+    /* Filter for Patreon Brand Red */
+    filter: invert(37%) sepia(93%) saturate(6011%) hue-rotate(344deg) brightness(103%) contrast(100%);
+}
+
 /* Container must be set to relative positioning for the layers to work */
 .animatic-avatar-container {
     position: relative;
